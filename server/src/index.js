@@ -5,6 +5,7 @@ const db = require("./db/db")
 
 const getAllStations = require("./routes/getAllStations");
 const getJourneys = require("./routes/getJourneys");
+const getStation = require("./routes/getStation");
 
 const app = express();
 const port =  process.env.API_PORT || 9001;
