@@ -1,0 +1,18 @@
+{
+  "name": "helcitybiker",
+  "version": "1.0.0",
+  "description": "An app to visualize Helsinki City Bikes usage\"",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jugipe/helcitybiker.git"
+  },
+  "author": "jugipe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jugipe/helcitybiker/issues"
+  },
+  "homepage": "https://github.com/jugipe/helcitybiker#readme"
+}
