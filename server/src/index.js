@@ -16,6 +16,7 @@ app.use(express.json());
 //Routes
 app.get("/stations", getAllStations);
 app.get("/journeys", getJourneys);
+app.get("/stations/:name", getStation);
 
 db.init().then(() => {
     app.listen(port, () => {console.log("helcitybiker is running @ "+port)});

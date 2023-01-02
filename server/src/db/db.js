@@ -73,4 +73,13 @@ async function getJourneys() {
     })
 }
 
-module.exports = { init, pool, disconnect, getAllStations};
+async function getStation(name) {
+    return new Promise((acc, rej) => {
+        pool.query("SELECT * FROM stations WHERE name= $1",[name],(err, data) => {
+            if(err) return rej(err);
+            acc(data);
+        })
+    })
+}
+
+module.exports = { init, pool, disconnect, getAllStations, getJourneys, getStation};
