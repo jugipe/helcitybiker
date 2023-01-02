@@ -54,3 +54,14 @@ async function disconnect() {
         });
     });
 }
+
+async function getAllStations() {
+    return new Promise((acc, rej) => {
+        pool.query("SELECT * FROM stations", (err, data) => {
+            if(err) return rej(err);
+            acc(data);
+        })
+    })
+}
+
+module.exports = { init, pool, disconnect, getAllStations};
