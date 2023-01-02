@@ -4,6 +4,7 @@ const cors = require("cors")
 const db = require("./db/db")
 
 const getAllStations = require("./routes/getAllStations");
+const getJourneys = require("./routes/getJourneys");
 
 const app = express();
 const port =  process.env.API_PORT || 9001;
@@ -14,6 +15,7 @@ app.use(express.json());
 
 //Routes
 app.get("/stations", getAllStations);
+app.get("/journeys", getJourneys);
 
 db.init().then(() => {
     app.listen(port, () => {console.log("helcitybiker is running @ "+port)});

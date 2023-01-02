@@ -64,4 +64,13 @@ async function getAllStations() {
     })
 }
 
+async function getJourneys() {
+    return new Promise((acc, rej) => {
+        pool.query("SELECT * FROM journeys", (err, data) => {
+            if(err) return rej(err);
+            acc(data);
+        })
+    })
+}
+
 module.exports = { init, pool, disconnect, getAllStations};
