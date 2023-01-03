@@ -55,7 +55,7 @@ async function disconnect() {
 
 async function getAllStations() {
     return new Promise((acc, rej) => {
-        pool.query("SELECT * FROM stations", (err, data) => {
+        pool.query("SELECT * FROM stations ORDER BY fid ASC", (err, data) => {
             if(err) return rej(err);
             acc(data);
         })
@@ -74,7 +74,7 @@ async function getJourneys() {
 async function getStation(name) {
     return new Promise((acc, rej) => {
         pool.query("SELECT * FROM stations WHERE name= $1",[name],(err, data) => {
-            if(err) return rej(err);
+            if(err) {console.log(err); return rej(err)};
             acc(data);
         })
     })
@@ -85,7 +85,7 @@ async function addStation(fid, id, nimi, namn, name, osoite, address, kaupunki, 
         pool.query("INSERT INTO stations(fid, id, nimi, namn, name, osoite, address, kaupunki, stad,"+
          "operaattori, kapasiteetti, location_x, location_y) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)", 
          [fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y], err => {
-            if(err) return rej(err);
+            if(err) {console.log(err); return rej(err)};
          });
          acc();
     });
@@ -104,8 +104,8 @@ async function addJourney(departure_time, return_time, dep_station_id, dep_stati
 
 async function truncateTable(tableName){
     return new Promise((acc, rej) => {
-        pool.query('TRUNCATE '+tableName, err => {
-            if(err) return rej(err);
+        pool.query("TRUNCATE "+tableName+" RESTART IDENTITY", err => {
+            if(err) {console.log(err); return rej(err)};
         });
         acc();
     });
