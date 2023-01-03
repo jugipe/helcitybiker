@@ -51,6 +51,7 @@ describe("Express server", async () =>{
                 });
         });
     });
+
     describe("/GET journeys",  async () => {
         it("it should have status 200", (done) => {
             chai.request(api)
@@ -73,6 +74,34 @@ describe("Express server", async () =>{
                 .get("/journeys")
                 .end((err, res) => {
                     res.body.length.should.be.not.equal(0);
+                done();
+                });
+        });
+    });
+
+    describe("/GET a station",  async () => {
+        it("it should have status 200", (done) => {
+            chai.request(api)
+                .get("/stations/Keilalahti")
+                .end((err, res) => {
+                    res.should.have.status(200);
+                done();
+                });
+        });
+        it("it should should not be an array", (done) => {
+            chai.request(api)
+                .get("/stations/Keilalahti")
+                .end((err, res) => {
+                    res.should.not.be.a("array");
+                    res.body.should.be.a("object");
+                done();
+                });
+        });
+        it("it should GET station info", (done) => {
+            chai.request(api)
+                .get("/stations/Keilalahti")
+                .end((err, res) => {
+                    res.body.should.have.property("name").equal("Keilalahti");
                 done();
                 });
         });
