@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An app to visualize Helsinki City Bikes usage\"",
   "scripts": {
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm start\" ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/jugipe/helcitybiker/issues"
   },
-  "homepage": "https://github.com/jugipe/helcitybiker#readme"
+  "homepage": "https://github.com/jugipe/helcitybiker#readme",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
