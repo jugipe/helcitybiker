@@ -51,4 +51,30 @@ describe("Express server", async () =>{
                 });
         });
     });
+    describe("/GET journeys",  async () => {
+        it("it should have status 200", (done) => {
+            chai.request(api)
+                .get("/journeys")
+                .end((err, res) => {
+                    res.should.have.status(200);
+                done();
+                });
+        });
+        it("it should return a json array", (done) => {
+            chai.request(api)
+                .get("/journeys")
+                .end((err, res) => {
+                    res.body.should.be.a("array");
+                done();
+            });
+        });
+        it("it should GET all the journeys", (done) => {
+            chai.request(api)
+                .get("/journeys")
+                .end((err, res) => {
+                    res.body.length.should.be.not.equal(0);
+                done();
+                });
+        });
+    });
 });
