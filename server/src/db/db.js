@@ -27,7 +27,7 @@ async function init() {
     return new Promise((acc, rej) => {
         pool.query(
             'CREATE TABLE IF NOT EXISTS journeys (id SERIAL PRIMARY KEY,'+
-            'departure DATE, return DATE, departure_id INT, departure_name VARCHAR(50),'+ 
+            'departure TIMESTAMP, return TIMESTAMP, departure_id INT, departure_name VARCHAR(50),'+ 
             'return_id INT, return_name VARCHAR(50), distance INT, duration INT)', 
             err => {
                 if(err) return rej(err);
@@ -40,8 +40,6 @@ async function init() {
             err => {
                 if(err) return rej(err);
             });
-
-        console.log("Connected to postgresql @ "+host+":"+port);
         acc();
     });
 }
@@ -82,4 +80,35 @@ async function getStation(name) {
     })
 }
 
-module.exports = { init, pool, disconnect, getAllStations, getJourneys, getStation};
+async function addStation(fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y){
+    return new Promise((acc, rej) => {
+        pool.query("INSERT INTO stations(fid, id, nimi, namn, name, osoite, address, kaupunki, stad,"+
+         "operaattori, kapasiteetti, location_x, location_y) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)", 
+         [fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y], err => {
+            if(err) return rej(err);
+         });
+         acc();
+    });
+}
+
+async function addJourney(departure_time, return_time, dep_station_id, dep_station_name, ret_station_id, ret_station_name, distance, duration){
+    return new Promise((acc, rej) => {
+        pool.query("INSERT INTO journeys(id, departure, return, departure_id, departure_name, return_id, return_name, distance, duration)"+
+        "VALUES(DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8)", [departure_time, return_time, dep_station_id, dep_station_name, ret_station_id, 
+            ret_station_name, distance, duration], err => {
+                if(err) return rej(err);
+            });
+            acc();
+    });
+}
+
+async function truncateTable(tableName){
+    return new Promise((acc, rej) => {
+        pool.query('TRUNCATE '+tableName, err => {
+            if(err) return rej(err);
+        });
+        acc();
+    });
+}
+
+module.exports = { init, pool, disconnect, getAllStations, getJourneys, getStation, addStation, addJourney, truncateTable};
