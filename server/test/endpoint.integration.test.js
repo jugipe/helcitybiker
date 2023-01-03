@@ -106,4 +106,29 @@ describe("Express server", async () =>{
                 });
         });
     });
+
+    describe("/GET a non-existent station",  async () => {
+        it("it should not GET station info", (done) => {
+            chai.request(api)
+                .get("/stations/nonexistingstation")
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.should.not.be.a("array");
+                    res.body.should.be.empty;
+                done();
+                });
+        });
+    
+    });
+    
+    describe("/GET non existent route",  async () => {
+        it("it should return 404", (done) => {
+            chai.request(api)
+                .get("/nonexistingroute")
+                .end((err, res) => {
+                    res.should.have.status(404);
+                    done();
+                });
+        });
+    });
 });
