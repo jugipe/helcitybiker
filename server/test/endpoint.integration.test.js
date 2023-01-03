@@ -6,14 +6,22 @@ const db = require("../src/db/db")
 
 chai.use(chaiHttp);
 
+let firstStationName;
+
 describe("Express server", async () =>{
-    before("Load test data", async() => { 
-        await db.addStation(1,503, "Keilalahti","Kägelviken","Keilalahti","Keilalahdentie 2",
-        "Kägelviksvägen 2","Espoo","Esbo","CityBike Finland", 10, "28,24.827467","60.171524");
+    before("Load test data", async() => {
+        
+        // Add data from stations.json and journeys.json and to test database
+        const stations = require("./test.stations.json");
+        for (const e of stations){
+            await db.addStation(e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13]);
+        }
 
-        await db.addJourney("2021-05-31T23:57:25", "2021-06-01T00:05:46", 094, "Laajalahden aukio",
-         100, "Teljäntie", 2043, 500);
-
+        const journeys = require("./test.journeys.json");
+        for(const e of journeys){
+            await db.addJourney(e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8]);
+        }
+        
         console.log("---");
     });
 
@@ -28,7 +36,7 @@ describe("Express server", async () =>{
     describe("/GET stations",  async () => {
         it("it should have status 200", (done) => {
             chai.request(api)
-                .get("/journeys")
+                .get("/stations")
                 .end((err, res) => {
                     res.should.have.status(200);
                 done();
@@ -45,7 +53,7 @@ describe("Express server", async () =>{
         it("it should GET all the stations", (done) => {
             chai.request(api)
                 .get("/stations")
-                .end((err, res) => {
+                .end((err, res) => {               
                     res.body.length.should.be.not.equal(0);
                 done();
                 });
@@ -80,9 +88,14 @@ describe("Express server", async () =>{
     });
 
     describe("/GET a station",  async () => {
+
+        // Get the first station name from test data
+        const stations = require("./test.stations.json");
+        const firstStationName = stations[0][2];
+
         it("it should have status 200", (done) => {
             chai.request(api)
-                .get("/stations/Keilalahti")
+                .get("/stations/"+firstStationName)
                 .end((err, res) => {
                     res.should.have.status(200);
                 done();
@@ -90,7 +103,7 @@ describe("Express server", async () =>{
         });
         it("it should should not be an array", (done) => {
             chai.request(api)
-                .get("/stations/Keilalahti")
+                .get("/stations/"+firstStationName)
                 .end((err, res) => {
                     res.should.not.be.a("array");
                     res.body.should.be.a("object");
@@ -99,9 +112,9 @@ describe("Express server", async () =>{
         });
         it("it should GET station info", (done) => {
             chai.request(api)
-                .get("/stations/Keilalahti")
+                .get("/stations/"+firstStationName)
                 .end((err, res) => {
-                    res.body.should.have.property("name").equal("Keilalahti");
+                    res.body.should.have.property("name").equal(firstStationName);
                 done();
                 });
         });
