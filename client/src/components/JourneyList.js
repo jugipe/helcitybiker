@@ -24,7 +24,7 @@ const JourneyList = () => {
                 <tbody>
                     {journeys.map(journey => (
                     <tr key={journey.id}>
-                        <td>>{journey.departure_name}</td>
+                        <td>{journey.departure_name}</td>
                         <td>{journey.return_name}</td>
                         <td>{journey.distance} m</td>
                         <td>{journey.duration} s</td>
