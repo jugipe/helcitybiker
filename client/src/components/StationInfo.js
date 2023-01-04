@@ -15,10 +15,10 @@ const StationInfo = () => {
             .then(setStation)
     }, [name]);
 
-    if(station === undefined || station.name === undefined){return <h1>No Stationdata with Given Station Name</h1>}
+    if(station === undefined || station.name === undefined){return <h1 className="text-center mt-3">No Stationdata with Given Station Name</h1>}
 
     return (
-        <h1>{station.name}</h1>
+        <h1 className="text-center mt-3">{station.name}</h1>
     )
 }
 
