@@ -12,7 +12,7 @@ const JourneyList = () => {
 
     return (
         <div className="container">
-            <h1 className="mt-3">City Bike Journeys</h1>
+            <h1 className="mt-3 h1">City Bike Journeys</h1>
             <table className="table table-sm table-dark table-striped table-hover table mt-4">
                 <thead>
                 <tr>

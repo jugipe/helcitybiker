@@ -3,7 +3,7 @@
 }
 
 .links {
-  font-size: calc(6px + 2vmin);
+  font-size: calc(6px + 1vmin);
   text-decoration: none;
   color: inherit;
 }
@@ -13,12 +13,24 @@
   color: #bfbfbf;
 }
 
+.h1 {
+  font-size: calc(26px + 3vmin);
+}
+
+.h2 {
+  font-size: calc(20px + 2vmin);
+}
+
+.h3 {
+  font-size: calc(16px + 1vmin);
+}
+
 .dark {
   background-color: #2d2d2d;
 }
 
 .text {
-  font-size: calc(6px + 2vmin);
+  font-size: calc(6px + 1vmin);
 }
 
 .stationInfoCard {
