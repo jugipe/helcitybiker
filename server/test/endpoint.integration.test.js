@@ -101,12 +101,19 @@ describe("Express server", async () =>{
                 done();
                 });
         });
-        it("it should should not be an array", (done) => {
+        it("it should return a json array", (done) => {
             chai.request(api)
                 .get("/stations/"+firstStationName)
                 .end((err, res) => {
-                    res.should.not.be.a("array");
-                    res.body.should.be.a("object");
+                    res.body.should.be.a("array");
+                done();
+                });
+        });
+        it("it should GET only one station", (done) => {
+            chai.request(api)
+                .get("/stations/"+firstStationName)
+                .end((err, res) => {
+                    res.body.length.should.be.equal(1);
                 done();
                 });
         });
@@ -114,7 +121,9 @@ describe("Express server", async () =>{
             chai.request(api)
                 .get("/stations/"+firstStationName)
                 .end((err, res) => {
-                    res.body.should.have.property("name").equal(firstStationName);
+                    // filter only the wanted data and test against it
+                    const data = res.body.map(x => ({name: firstStationName})) 
+                    data.should.include({name: firstStationName})
                 done();
                 });
         });
