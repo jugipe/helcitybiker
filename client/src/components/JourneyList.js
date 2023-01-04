@@ -12,8 +12,8 @@ const JourneyList = () => {
 
     return (
         <div className="container">
-            <h1 className="text-center mt-3">City Bike Journeys</h1>
-            <table className="table table-sm table-dark table-striped table-hover table mt-4 text-center">
+            <h1 className="mt-3">City Bike Journeys</h1>
+            <table className="table table-sm table-dark table-striped table-hover table mt-4">
                 <thead>
                 <tr>
                     <th>Departure station</th>
@@ -27,8 +27,8 @@ const JourneyList = () => {
                     <tr key={journey.id}>
                         <td><Link className="links" to={"/stationinfo/"+journey.departure_name}>{journey.departure_name}</Link></td>
                         <td><Link className="links" to={"/stationinfo/"+journey.return_name}>{journey.return_name}</Link></td>
-                        <td>{journey.distance} m</td>
-                        <td>{journey.duration} s</td>
+                        <td className="text">{journey.distance} m</td>
+                        <td className="text">{journey.duration} s</td>
                     </tr>
                     ))}
                 </tbody>

@@ -15,11 +15,11 @@ const StationInfo = () => {
             .then(setStation)
     }, [name]);
 
-    if(station === undefined || station.name === undefined){return <h1 className="text-center mt-3">No Stationdata with Given Station Name</h1>}
+    if(station === undefined || station.name === undefined){return <h1 className="mt-3 stationInfoCard">No Stationdata with Given Station Name</h1>}
 
     return (
         <div>
-            <h1 className="text-center mt-3">{station.name}</h1>
+            <h1 className="mt-3">{station.name}</h1>
             <div className="container d-flex flex-row mt-2 d-inline-block flex-row">
                 <div className="stationInfoCard d-flex mt-2 w-50 flex-column">
                     <h1>{station.osoite}</h1>

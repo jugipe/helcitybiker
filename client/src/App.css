@@ -3,7 +3,7 @@
 }
 
 .links {
-  font-size: calc(8px + 2vmin);
+  font-size: calc(6px + 2vmin);
   text-decoration: none;
   color: inherit;
 }
@@ -18,7 +18,7 @@
 }
 
 .text {
-  font-size: calc(8px + 2vmin);
+  font-size: calc(6px + 2vmin);
 }
 
 .stationInfoCard {

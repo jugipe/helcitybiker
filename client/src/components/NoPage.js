@@ -1,6 +1,6 @@
 const NoPage = () => {
     return (
-        <h1 className="text-center mt-3">No Content</h1>
+        <h1 className="mt-3">No Content</h1>
     )
 }
 

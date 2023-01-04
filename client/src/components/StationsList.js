@@ -11,9 +11,9 @@ const StationList = () => {
     }, []);
 
     return (
-        <div className="container">
-            <h1 className="text-center mt-3">City Bike Stations</h1>
-            <table className="table table-sm table-dark table-striped table-hover table mt-4 text-center">
+        <div className="container h-90">
+            <h1 className="mt-3">City Bike Stations</h1>
+            <table className="table table-sm table-dark table-striped table-hover table mt-4">
                 <thead>
                 <tr>
                     <th>Station name</th>
@@ -24,7 +24,7 @@ const StationList = () => {
                     {stations.map(station => (
                     <tr key={station.name}>
                         <td><Link className="links" to={"/stationinfo/"+station.name}>{station.name}</Link></td>
-                        <td>{station.osoite}</td>
+                        <td className="text">{station.osoite}</td>
                     </tr>
                     ))}
                 </tbody>
