@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const StationList = () => {
     const [ stations, setStations ] = useState([]);
@@ -22,7 +23,7 @@ const StationList = () => {
                 <tbody>
                     {stations.map(station => (
                     <tr key={station.name}>
-                        <td>{station.name}</td>
+                        <td><Link className="links" to={"/stationinfo/"+station.name}>{station.name}</Link></td>
                         <td>{station.osoite}</td>
                     </tr>
                     ))}
