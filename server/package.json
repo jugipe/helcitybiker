@@ -4,7 +4,8 @@
     "description": "express server",
     "main": "src/index.js",
     "scripts": {
-        "dev": "NODE_ENV=dev nodemon src/index.js",
+        "dev": "NODE_ENV=dev NODE_ENV_POPULATE=false nodemon src/index.js",
+        "dev:populate": "NODE_ENV=dev NODE_ENV_POPULATE=true nodemon src/index.js",
         "test": "NODE_ENV=test mocha --timeout 10000"
     },
     "author": "jugipe",

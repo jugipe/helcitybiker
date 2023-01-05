@@ -4,6 +4,7 @@
   "description": "An app to visualize Helsinki City Bikes usage\"",
   "scripts": {
     "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run start\" ",
+    "dev:populate": "concurrently \"cd server && npm run dev:populate\" \"cd client && npm run start\" ",
     "test": "concurrently \"cd server && npm run test\" \"cd client && npm run test\" "
   },
   "repository": {
