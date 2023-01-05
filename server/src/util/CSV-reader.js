@@ -12,7 +12,10 @@ const readCSV = (filepath, dataType) => {
         // when some parsed data is ready add it to right table
         .on("data", (row) => {
             if(dataType === "stationdata"){
-                db.addStation(...row);
+                
+                // data is missing city and operator on every station in Helsinki, so add them
+                    correctStationData(row);
+                    db.addStation(...row);
             } else if (dataType === "journeydata"){
                 db.addJourney(...row);
             }
@@ -52,6 +55,14 @@ const readFiles = (dir, dataType) => {
             });
         });
     })
+}
+
+
+const correctStationData = (row) => {
+    if(row[7] === " "){row[7] = "Helsinki"};
+    if(row[8] === " "){row[8] = "Helsingfors"};
+    if(row[9] === " "){row[9] = "CityBike Finland"};
+    return row;
 }
 
 module.exports = readFiles;
