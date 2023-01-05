@@ -4,12 +4,19 @@ import { getStationsFromApi } from "../api/getStationsFromApi"
 
 const StationList = () => {
     const [ stations, setStations ] = useState([]);
+    const [ error, setError ] = useState(false);
 
     useEffect(() => {
         getStationsFromApi()
             .then(setStations)
-            .catch(err => console.log(err))
+            .catch((err) => setError(true))
     }, []);
+
+    // return error message if API call fails
+    if(error){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
+
+    // return error message if API call returns no data
+    if(stations.length === 0){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
     return (
         <div className="container">

@@ -6,16 +6,20 @@ const StationInfo = () => {
 
     // Get station name with useParams hook
     const { name } = useParams();
-
     const [ station, setStation ] = useState({});
+    const [ error, setError ] = useState(false);
 
     useEffect(() => {
         getStationInfoFromApi(name)
             .then(array => array[0]) // Api returns an array of one, so only take the first from array
             .then(setStation)
-            .catch(err => console.log(err))
+            .catch(err => setError(true))
     }, [name]);
 
+    // return error message if API call fails
+    if(error){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
+
+    // return error message if API call returns no data
     if(station === undefined || station.name === undefined){return <h1 className="h1 mt-3 stationInfoCard">No Stationdata With Given Station Name</h1>}
 
     return (
