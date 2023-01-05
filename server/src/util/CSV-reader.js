@@ -14,10 +14,15 @@ const readCSV = (filepath, dataType) => {
             if(dataType === "stationdata"){
                 
                 // data is missing city and operator on every station in Helsinki, so add them
-                    correctStationData(row);
-                    db.addStation(...row);
+                correctStationData(row);
+                db.addStation(...row);
+
             } else if (dataType === "journeydata"){
-                db.addJourney(...row);
+
+                // validate journeydata, skip journeys less than ten seconds and shorter than ten meters
+                if(journeyDataValid(row)){
+                    db.addJourney(...row);
+                }
             }
         })
         .on("end", () => {
@@ -63,6 +68,13 @@ const correctStationData = (row) => {
     if(row[8] === " "){row[8] = "Helsingfors"};
     if(row[9] === " "){row[9] = "CityBike Finland"};
     return row;
+}
+
+const journeyDataValid = (row) => {
+    if(Number(row[6]) < 10 || Number(row[7]) < 10){
+        return false;
+    }
+    return true;
 }
 
 module.exports = readFiles;
