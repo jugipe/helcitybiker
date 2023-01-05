@@ -1,16 +1,22 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getJourneysFromApi } from "../api/getJourneysFromApi"
+import { getJourneysFromApi } from "../api/getJourneysFromApi";
+import Spinner from "./Spinner";
 
 const JourneyList = () => {
     const [ journeys, setJourneys ] = useState([]);
     const [ error, setError ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(true);
 
     useEffect(() => {
         getJourneysFromApi()
             .then(setJourneys)
+            .then(() => setIsLoading(false))
             .catch(err => setError(true))
     }, []);
+
+    // loading screen while waiting on api calls
+    if(isLoading){return (<Spinner />)}
 
     // return error message if API call fails
     if(error){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}

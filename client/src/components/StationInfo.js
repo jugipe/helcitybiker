@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getStationInfoFromApi } from "../api/getStationInfoFromApi"
+import { getStationInfoFromApi } from "../api/getStationInfoFromApi";
+import Spinner from "./Spinner";
 
 const StationInfo = () => {
 
@@ -8,13 +9,18 @@ const StationInfo = () => {
     const { name } = useParams();
     const [ station, setStation ] = useState([]);
     const [ error, setError ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(true);
 
     useEffect(() => {
         getStationInfoFromApi(name)
             .then(array => array[0]) // Api returns an array of one, so only take the first from array
             .then(setStation)
+            .then(() => setIsLoading(false))
             .catch(err => setError(true))
     }, [name]);
+
+    // loading screen while waiting on api calls
+    if(isLoading){return (<Spinner />)}
 
     // return error message if API call fails
     if(error){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
