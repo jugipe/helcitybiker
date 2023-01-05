@@ -6,7 +6,7 @@ const StationInfo = () => {
 
     // Get station name with useParams hook
     const { name } = useParams();
-    const [ station, setStation ] = useState({});
+    const [ station, setStation ] = useState([]);
     const [ error, setError ] = useState(false);
 
     useEffect(() => {
