@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getJourneysFromApi } from "../api/getJourneysFromApi"
 
 const JourneyList = () => {
     const [ journeys, setJourneys ] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:9001/journeys")
-            .then(data => data.json())
+        getJourneysFromApi()
             .then(setJourneys)
+            .catch(err => console.log(err))
     }, []);
 
     return (
