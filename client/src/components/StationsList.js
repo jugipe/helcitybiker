@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getStationsFromApi } from "../api/getStationsFromApi"
 
 const StationList = () => {
     const [ stations, setStations ] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:9001/stations")
-            .then(data => data.json())
+        getStationsFromApi()
             .then(setStations)
+            .catch(err => console.log(err))
     }, []);
 
     return (
