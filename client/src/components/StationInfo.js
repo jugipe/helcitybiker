@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getStationInfoFromApi } from "../api/getStationInfoFromApi"
 
 const StationInfo = () => {
 
@@ -9,13 +10,13 @@ const StationInfo = () => {
     const [ station, setStation ] = useState({});
 
     useEffect(() => {
-        fetch("http://localhost:9001/stations/"+name)
-            .then(data => data.json())
-            .then(array => array[0]) // take the first of the array
+        getStationInfoFromApi(name)
+            .then(array => array[0]) // Api returns an array of one, so only take the first from array
             .then(setStation)
+            .catch(err => console.log(err))
     }, [name]);
 
-    if(station === undefined || station.name === undefined){return <h1 className="h1 mt-3 stationInfoCard">No Stationdata with Given Station Name</h1>}
+    if(station === undefined || station.name === undefined){return <h1 className="h1 mt-3 stationInfoCard">No Stationdata With Given Station Name</h1>}
 
     return (
         <div>
