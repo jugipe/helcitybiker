@@ -10,7 +10,8 @@
 /build
 
 # misc
-*.csv
+*/files/journeydata/*
+*/files/stationdata/*
 .DS_Store
 .env
 .env.local
