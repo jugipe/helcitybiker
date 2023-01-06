@@ -3,24 +3,16 @@ const chai = require("chai");
 const chaiHttp = require("chai-http");
 const should = chai.should();
 const db = require("../src/db/db")
+const path = require("path");
+const populateDB = require("../src/util/populateDB");
 
 chai.use(chaiHttp);
-
-let firstStationName;
 
 describe("Express server", async () =>{
     before("Load test data", async() => {
         
-        // Add data from stations.json and journeys.json and to test database
-        const stations = require("./test.stations.json");
-        for (const e of stations){
-            await db.addStation(e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8], e[9], e[10], e[11], e[12], e[13]);
-        }
-
-        const journeys = require("./test.journeys.json");
-        for(const e of journeys){
-            await db.addJourney(e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7], e[8]);
-        }
+        // Add data from testdata and add it to test database
+        await populateDB(path.join(__dirname, "/testdata/"));
         
         console.log("---");
     });
@@ -54,7 +46,7 @@ describe("Express server", async () =>{
             chai.request(api)
                 .get("/stations")
                 .end((err, res) => {               
-                    res.body.length.should.be.not.equal(0);
+                    res.body.length.should.be.equal(5);
                 done();
                 });
         });
@@ -81,7 +73,7 @@ describe("Express server", async () =>{
             chai.request(api)
                 .get("/journeys")
                 .end((err, res) => {
-                    res.body.length.should.be.not.equal(0);
+                    res.body.length.should.be.equal(5);
                 done();
                 });
         });
@@ -89,9 +81,8 @@ describe("Express server", async () =>{
 
     describe("/GET a station",  async () => {
 
-        // Get the first station name from test data
-        const stations = require("./test.stations.json");
-        const firstStationName = stations[0][2];
+        // Get the first station name of known data
+        const firstStationName = "Test1"
 
         it("it should have status 200", (done) => {
             chai.request(api)
@@ -121,9 +112,10 @@ describe("Express server", async () =>{
             chai.request(api)
                 .get("/stations/"+firstStationName)
                 .end((err, res) => {
-                    // filter only the wanted data and test against it
-                    const data = res.body.map(x => ({name: firstStationName})) 
-                    data.should.include({name: firstStationName})
+                    // res body should be only len 1, so we can take the first element
+                    // and test against it
+                    const data = res.body[0];
+                    data.should.include({nimi: firstStationName})
                 done();
                 });
         });
