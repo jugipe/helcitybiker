@@ -1,12 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { getStationsFromApi } from "../api/getStationsFromApi";
 import Spinner from "./Spinner";
+import ReactPaginate from 'react-paginate';
 
 const StationList = () => {
     const [ stations, setStations ] = useState([]);
     const [ error, setError ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(true);
+
+    // pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [stationsPerPage] = useState(20);
 
     useEffect(() => {
         getStationsFromApi()
@@ -24,7 +29,16 @@ const StationList = () => {
     // return error message if API call returns no data
     if(stations.length === 0){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
+    const indexOfLastStation = currentPage * stationsPerPage;
+    const indexOfFirstStation = indexOfLastStation - stationsPerPage;
+    const currentStationList = stations.slice(indexOfFirstStation, indexOfLastStation);
+
+    const paginate = ({ selected }) => {
+        setCurrentPage(selected + 1);
+    }
+
     return (
+        <Fragment>
         <div className="container">
             <h1 className="mt-3 h1">City Bike Stations</h1>
             <table className="table table-sm table-dark table-striped table-hover table mt-4">
@@ -35,7 +49,7 @@ const StationList = () => {
                 </tr>
                 </thead>
                 <tbody>
-                    {stations.map(station => (
+                    {currentStationList.map(station => (
                     <tr key={station.nimi}>
                         <td><Link className="links" to={"/stationinfo/"+station.nimi}>{station.nimi}</Link></td>
                         <td className="text">{station.osoite}</td>
@@ -44,6 +58,20 @@ const StationList = () => {
                 </tbody>
             </table>
         </div>
+        <div className="pagination justify-content-center">
+            <ReactPaginate
+                    onPageChange={paginate}
+                    pageCount={Math.ceil(stations.length / stationsPerPage)}
+                    previousLabel={"Prev"}
+                    nextLabel={'Next'}
+                    containerClassName={'pagination'}
+                    pageLinkClassName={'page-number'}
+                    previousLinkClassName={'page-number'}
+                    nextLinkClassName={'page-number'}
+                    activeLinkClassName={'active'}
+            />
+        </div>
+        </Fragment>
     )
 }
 
