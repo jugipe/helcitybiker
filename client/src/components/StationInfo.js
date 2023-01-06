@@ -26,11 +26,11 @@ const StationInfo = () => {
     if(error){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
     // return error message if API call returns no data
-    if(station === undefined || station.name === undefined){return <h1 className="h1 mt-3 stationInfoCard">No Stationdata With Given Station Name</h1>}
+    if(station === undefined || station.nimi === undefined){return <h1 className="h1 mt-3 stationInfoCard">No Stationdata With Given Station Name</h1>}
 
     return (
         <div>
-            <h1 className="h1 mt-3">{station.name}</h1>
+            <h1 className="h1 mt-3">{station.nimi}</h1>
             <div className="container d-flex flex-row mt-2 d-inline-block flex-row">
                 <div className="stationInfoCard d-flex mt-2 w-50 flex-column">
                     <h2 className="h2">{station.osoite}</h2>
