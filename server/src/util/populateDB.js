@@ -10,5 +10,4 @@ const populateDB = (dir) => {
 
 }
 
-
 module.exports = populateDB;

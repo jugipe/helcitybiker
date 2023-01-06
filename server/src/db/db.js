@@ -33,8 +33,8 @@ async function init() {
                 if(err) return rej(err);
             });
         pool.query(
-            'CREATE TABLE IF NOT EXISTS stations (fid INT PRIMARY KEY, id INT, nimi VARCHAR(50)'+
-            'UNIQUE, namn VARCHAR(50) UNIQUE, name VARCHAR(50) UNIQUE, osoite VARCHAR(50),'+
+            'CREATE TABLE IF NOT EXISTS stations (fid INT PRIMARY KEY, id INT, nimi VARCHAR(50),'+
+            'namn VARCHAR(50), name VARCHAR(50), osoite VARCHAR(50),'+
             'address VARCHAR(50), kaupunki VARCHAR(20), stad VARCHAR(20), Operaattori VARCHAR(50), Kapasiteetti INT,'+
             'location_x VARCHAR(50), location_y VARCHAR(50))',
             err => {
@@ -64,7 +64,7 @@ async function getAllStations() {
 
 async function getJourneys() {
     return new Promise((acc, rej) => {
-        pool.query("SELECT * FROM journeys", (err, data) => {
+        pool.query("SELECT * FROM journeys ORDER BY id ASC", (err, data) => {
             if(err) return rej(err);
             acc(data);
         })
@@ -73,7 +73,7 @@ async function getJourneys() {
 
 async function getStation(name) {
     return new Promise((acc, rej) => {
-        pool.query("SELECT * FROM stations WHERE name= $1",[name],(err, data) => {
+        pool.query("SELECT * FROM stations WHERE nimi= $1",[name],(err, data) => {
             if(err) {console.log(err); return rej(err)};
             acc(data);
         })
