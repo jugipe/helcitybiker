@@ -56,18 +56,30 @@ const StationInfo = () => {
                             </tbody>
                         </table>
                         <div className="d-flex flex-row mt-3">
-                            <ol className="list w-50">
-                                <label><u>Top 5 Departures</u></label>
+                            <table className="table w-50 ml-2">
+                                <thead>
+                                    <tr>
+                                        <th>Top 5 Departures</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                 {stationInfo[3].map(station => (
-                                    <li><Link className="links" to={"/stationinfo/"+station.departure_id}>{station.departure_name}</Link></li>
+                                    <tr><Link className="links" to={"/stationinfo/"+station.departure_id}>{station.departure_name}</Link></tr>
                                 ))}
-                            </ol>
-                            <ol className="list w-50">
-                                        <label><u>Top 5 Returns</u></label>
+                                </tbody>
+                            </table>
+                            <table className="table w-50">
+                                <thead>
+                                    <tr>
+                                        <th>Top 5 Returns</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                     {stationInfo[4].map(station => (
-                                        <li><Link className="links" to={"/stationinfo/"+station.return_id}>{station.return_name}</Link></li>
+                                        <tr><Link className="links" to={"/stationinfo/"+station.return_id}>{station.return_name}</Link></tr>
                                     ))}
-                            </ol>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
