@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getStationsFromApi } from "../api/getStationsFromApi";
 import Spinner from "./Spinner";
@@ -38,7 +38,6 @@ const StationList = () => {
     }
 
     return (
-        <Fragment>
         <div className="container">
             <h1 className="mt-3 h1">City Bike Stations</h1>
             <table className="table table-sm table-dark table-striped table-hover table mt-4">
@@ -57,9 +56,7 @@ const StationList = () => {
                     ))}
                 </tbody>
             </table>
-        </div>
-        <div className="pagination justify-content-center">
-            <ReactPaginate
+            <ReactPaginate className="pagination justify-content-center mt-2"
                     onPageChange={paginate}
                     pageCount={Math.ceil(stations.length / stationsPerPage)}
                     previousLabel={"Prev"}
@@ -71,7 +68,6 @@ const StationList = () => {
                     activeLinkClassName={'active'}
             />
         </div>
-        </Fragment>
     )
 }
 

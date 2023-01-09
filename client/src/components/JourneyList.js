@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getJourneysFromApi } from "../api/getJourneysFromApi";
 import Spinner from "./Spinner";
@@ -38,7 +38,6 @@ const JourneyList = () => {
     if(journeys.length === 0){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
     return (
-        <Fragment>
         <div className="container">
             <h1 className="mt-3 h1">City Bike Journeys</h1>
             <table className="table table-sm table-dark table-striped table-hover table mt-4">
@@ -61,9 +60,7 @@ const JourneyList = () => {
                     ))}
                 </tbody>
             </table>
-        </div>
-        <div className="pagination justify-content-center">
-            <ReactPaginate
+            <ReactPaginate className="pagination justify-content-center mt-2 p-"
                     onPageChange={paginate}
                     pageCount={Math.ceil(journeys.length / journeysPerPage)}
                     previousLabel={"Prev"}
@@ -75,7 +72,6 @@ const JourneyList = () => {
                     activeLinkClassName={'active'}
             />
         </div>
-        </Fragment>
     )
 }
 
