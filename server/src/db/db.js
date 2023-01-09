@@ -111,6 +111,46 @@ async function getStation(name) {
     });
 }
 
+async function getStationDepInfo(name) {
+    return new Promise((acc, rej) => {
+        pool.query("SELECT COUNT(return_name) AS departures, AVG(distance) AS avg_dep_dist FROM journeys "+
+        "WHERE departure_name= $1",[name],(err, data) => {
+            if(err) {console.log(err); return rej(err)};
+            acc(data);
+        });
+    });
+}
+
+async function getStationRetInfo(name) {
+    return new Promise((acc, rej) => {
+        pool.query("SELECT COUNT(departure_name) AS returns, AVG(distance) AS avg_ret_dist FROM journeys "+
+        "WHERE return_name=$1",[name],(err, data) => {
+            if(err) {console.log(err); return rej(err)};
+            acc(data);
+        });
+    });
+}
+
+async function getStationRetTop5Info(name) {
+    return new Promise((acc, rej) => {
+        pool.query("SELECT return_name, COUNT(return_name) as top_5_dep FROM journeys WHERE departure_name = $1 "+
+        "GROUP BY return_name ORDER BY top_5_dep DESC LIMIT 5",[name],(err, data) => {
+            if(err) {console.log(err); return rej(err)};
+            acc(data);
+        });
+    });
+}
+
+async function getStationDepTop5Info(name) {
+    return new Promise((acc, rej) => {
+        pool.query("SELECT departure_name, COUNT(departure_name) as top_5_ret FROM journeys WHERE return_name = $1 "+
+        "GROUP BY departure_name ORDER BY top_5_ret DESC LIMIT 5",[name],(err, data) => {
+            if(err) {console.log(err); return rej(err)};
+            acc(data);
+        });
+    });
+}
+
 async function addStation(fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y){
     return new Promise((acc, rej) => {
         pool.query("INSERT INTO raw_stations(fid, id, nimi, namn, name, osoite, address, kaupunki, stad,"+
@@ -167,4 +207,6 @@ async function truncateTable(tableName){
 module.exports = { init, pool, disconnect, getAllStations,
                 getJourneys, getStation, addStation,
                 addJourney, truncateTable, addCSVtoTable,
-                makeViews, updateViews };
+                makeViews, updateViews, getStationDepInfo,
+                getStationRetInfo, getStationDepTop5Info,
+                getStationRetTop5Info };
