@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import StationList from "../components/StationsList";
 import { getStationsFromApi } from "../api/getStationsFromApi";
 import { BrowserRouter } from "react-router-dom";
@@ -22,9 +22,11 @@ describe("StationList Component", () => {
       render(<BrowserRouter><StationList/></BrowserRouter>);
 
       // See if all the content of mocked resolve value is rendered
-      await waitFor(() => {
-        screen.findByText("Test1");
-        screen.findByText("Testikatu 1");
+      await act(async() => {
+        await act(() => {
+          screen.findByText("Test1");
+          screen.findByText("Testikatu 1");
+        });
       });
     });
 
@@ -34,8 +36,10 @@ describe("StationList Component", () => {
       render(<BrowserRouter><StationList/></BrowserRouter>);
       
       // See if the error message is rendered
-      await waitFor(() => {
-        screen.findByText("Unable to fetch data");
+      await act(async() => {
+        await act(() => {
+          screen.findByText("Unable to fetch data");
+        })
       });
     });
 
@@ -44,8 +48,8 @@ describe("StationList Component", () => {
 
       async () => render(<BrowserRouter><StationList/></BrowserRouter>);
       
-      await waitFor(() => {
-        screen.findByText("Unable to fetch data");
-      });
+      await act(() => {
+          screen.findByText("Unable to fetch data");
+      })
     });
 });
