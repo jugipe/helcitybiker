@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import JourneyList from "../components/JourneyList";
 import { getJourneysFromApi } from "../api/getJourneysFromApi";
 import { BrowserRouter } from "react-router-dom";
@@ -22,13 +22,16 @@ describe("JourneyList Component", () => {
       render(<BrowserRouter><JourneyList/></BrowserRouter>);
 
       // See if all the content of mocked resolve value is rendered
-      await waitFor(() => {
-        screen.findByText("Test1");
-        screen.findByText("Test2");
-        screen.findByText("2043 m");
-        screen.findByText("500 s");
+      await act(async () => {
+        await act(() => {
+          screen.findByText("Test1");
+          screen.findByText("Test2");
+          screen.findByText("2043 m");
+          screen.findByText("500 s");
+        });
       });
     });
+
 
     it("should render error when api returns an empty array", async () => {
       getJourneysFromApi.mockResolvedValue([]);
@@ -36,17 +39,20 @@ describe("JourneyList Component", () => {
       render(<BrowserRouter><JourneyList/></BrowserRouter>);
       
       // See if the error message is rendered
-      await waitFor(() => {
-        screen.findByText("Unable to fetch data");
+      await act(async() => {
+        await act(() => {
+          screen.findByText("Unable to fetch data");
+        });
       });
     });
+
 
     it("should render error message when api fails", async () => {
       getJourneysFromApi.mockRejectedValue({});
 
       async () => render(<BrowserRouter><JourneyList/></BrowserRouter>);
       
-      await waitFor(() => {
+      await act(() => {
         screen.findByText("Unable to fetch data");
       });
     });
