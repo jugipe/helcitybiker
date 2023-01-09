@@ -93,9 +93,18 @@ async function getAllStations() {
     });
 }
 
-async function getJourneys() {
+async function getJourneys(offset, limit) {
     return new Promise((acc, rej) => {
-        pool.query("SELECT * FROM journeys ORDER BY id ASC LIMIT 500", (err, data) => {
+        pool.query("SELECT * FROM journeys ORDER BY id ASC OFFSET $1 LIMIT $2", [offset, limit], (err, data) => {
+            if(err) return rej(err);
+            acc(data);
+        });
+    });
+}
+
+async function getJourneyCount(){
+    return new Promise((acc, rej) => {
+        pool.query("SELECT COUNT(*) AS total FROM journeys", (err, data) => {
             if(err) return rej(err);
             acc(data);
         });
@@ -209,4 +218,4 @@ module.exports = { init, pool, disconnect, getAllStations,
                 addJourney, truncateTable, addCSVtoTable,
                 makeViews, updateViews, getStationDepInfo,
                 getStationRetInfo, getStationDepTop5Info,
-                getStationRetTop5Info };
+                getStationRetTop5Info, getJourneyCount };
