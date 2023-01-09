@@ -37,7 +37,7 @@ const StationInfo = () => {
                     <h2 className="h2">{stationInfo[0].osoite}</h2>
                     <h3 className="h3">{stationInfo[0].kaupunki}</h3>
                     <div className="d-flex flex-column mt-3">
-                        <table className="table">
+                        <table className="table flex-row">
                             <thead>
                                 <tr>
                                     <th>Total Departures</th>
@@ -55,36 +55,19 @@ const StationInfo = () => {
                                 </tr>
                             </tbody>
                         </table>
-                        <div className="d-flex flex-column">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Top 5 Departures</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    {stationInfo[3].map(station => (
-                                        <td><Link className="links" to={"/stationinfo/"+station.departure_id}>{station.departure_name}</Link></td>
-                                    ))}
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Top 5 Returns</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
+                        <div className="d-flex flex-row mt-3">
+                            <ol className="list w-50">
+                                <label><u>Top 5 Departures</u></label>
+                                {stationInfo[3].map(station => (
+                                    <li><Link className="links" to={"/stationinfo/"+station.departure_id}>{station.departure_name}</Link></li>
+                                ))}
+                            </ol>
+                            <ol className="list w-50">
+                                        <label><u>Top 5 Returns</u></label>
                                     {stationInfo[4].map(station => (
-                                        <td><Link className="links" to={"/stationinfo/"+station.return_id}>{station.return_name}</Link></td>
+                                        <li><Link className="links" to={"/stationinfo/"+station.return_id}>{station.return_name}</Link></li>
                                     ))}
-                                </tr>
-                            </tbody>
-                        </table>
-
+                            </ol>
                         </div>
                     </div>
                 </div>
