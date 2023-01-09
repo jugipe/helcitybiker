@@ -13,16 +13,17 @@ const JourneyList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [journeysPerPage] = useState(20);
 
+    const indexOfFirstJourney = currentPage * journeysPerPage - journeysPerPage;
+
     useEffect(() => {
-        getJourneysFromApi()
+        getJourneysFromApi(indexOfFirstJourney, journeysPerPage)
             .then(setJourneys)
             .then(() => setIsLoading(false))
             .catch(err => setError(true))
-    }, []);
+    }, [indexOfFirstJourney, journeysPerPage]);
 
-    const indexOfLastJourney = currentPage * journeysPerPage;
-    const indexOfFirstJourney = indexOfLastJourney - journeysPerPage;
-    const currentJourneyList = journeys.slice(indexOfFirstJourney, indexOfLastJourney);
+
+    //const currentJourneyList = journeys[0].slice(indexOfFirstJourney, indexOfLastJourney);
 
     const paginate = ({ selected }) => {
         setCurrentPage(selected + 1);
@@ -35,41 +36,49 @@ const JourneyList = () => {
     if(error){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
     // return error message if API call returns no data
-    if(journeys.length === 0){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
+    if(journeys[0].length === 0){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
     return (
         <div className="container">
-            <h1 className="mt-3 h1">City Bike Journeys</h1>
+            <h1 className="mt-3 h1">CITY BIKE JOURNEYS</h1>
             <table className="table table-sm table-dark table-striped table-hover table mt-4">
                 <thead>
                 <tr>
-                    <th>Departure station</th>
-                    <th>Return station</th>
-                    <th>Distance</th>
-                    <th>Duration</th>
+                    <th className="w-25">Departure station</th>
+                    <th className="w-25">Return station</th>
+                    <th className="w-25">Distance</th>
+                    <th className="w-25">Duration</th>
                 </tr>
                 </thead>
                 <tbody>
-                    {currentJourneyList.map(journey => (
+                    {journeys[0].map(journey => (
                     <tr key={journey.id}>
-                        <td><Link className="links" to={"/stationinfo/"+journey.departure_id}>{journey.departure_name}</Link></td>
-                        <td><Link className="links" to={"/stationinfo/"+journey.return_id}>{journey.return_name}</Link></td>
+                        <td ><Link className="links" to={"/stationinfo/"+journey.departure_id}>{journey.departure_name}</Link></td>
+                        <td ><Link className="links" to={"/stationinfo/"+journey.return_id}>{journey.return_name}</Link></td>
                         <td className="text">{journey.distance} m</td>
                         <td className="text">{journey.duration} s</td>
                     </tr>
                     ))}
                 </tbody>
             </table>
-            <ReactPaginate className="pagination justify-content-center mt-2 p-"
+            <ReactPaginate 
                     onPageChange={paginate}
-                    pageCount={Math.ceil(journeys.length / journeysPerPage)}
-                    previousLabel={"Prev"}
-                    nextLabel={'Next'}
-                    containerClassName={'pagination'}
-                    pageLinkClassName={'page-number'}
-                    previousLinkClassName={'page-number'}
-                    nextLinkClassName={'page-number'}
-                    activeLinkClassName={'active'}
+                    pageCount={Math.ceil(Number(journeys[1].total) / journeysPerPage)}
+                    previousLabel="Prev"
+                    nextLabel='Next'
+                    breakLabel="..."
+                    breakLinkClassName="page-link"
+                    breakClassName="page-item"
+                    pageRangeDisplayed="3"
+                    marginPagesDisplayed="1"
+                    containerClassName="pagination pagination-sm justify-content-center mt-3"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    activeLinkClassName="active"
             />
         </div>
     )
