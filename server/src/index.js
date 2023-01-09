@@ -24,14 +24,40 @@ app.get("/journeys", getJourneys);
 app.get("/stations/:name", getStation);
 app.get("*", get404);
 
-db.init().then(() => {
-
-    // populate the db depending on .env variable
+// chain functions to start everything on startup
+db.init().then(async() => {    
+    
     if(process.env.NODE_ENV_POPULATE === "true"){
-        populateDB(path.join(__dirname, "/files/"))
-    }
 
-    app.listen(port, () => {console.log("helcitybiker is running @ "+port)});
-}).catch((err) => {
-    console.log(err);
+        await populateDB(path.join(__dirname, "/files/"));
+
+    }}).then(async() => {
+
+        await db.makeViews();
+
+    }).then(async() => {
+
+        await db.updateViews();
+    
+    }).then(() => {
+
+        app.listen(port, () => {console.log("helcitybiker is running @ "+port)});
+        app.emit('started');
+
+    }).catch((err) => {
+        console.log(err);
 });
+
+// disconnect the db and exit the process
+const shutdown = () => {
+    db.disconnect()
+        .catch(() => {})
+        .then(() => process.exit());
+};
+
+// use shutdown on different process emits
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
+process.on('SIGUSR2', shutdown);
+
+module.exports = app;
