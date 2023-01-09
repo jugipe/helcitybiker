@@ -28,14 +28,14 @@ async function init() {
 
     return new Promise(async(acc, rej) => {
         await pool.query(
-            'CREATE TABLE IF NOT EXISTS journeys (id SERIAL PRIMARY KEY,'+
+            'CREATE TABLE IF NOT EXISTS raw_journeys (id SERIAL PRIMARY KEY,'+
             'departure TIMESTAMP, return TIMESTAMP, departure_id INT, departure_name VARCHAR(50),'+ 
             'return_id INT, return_name VARCHAR(50), distance DOUBLE PRECISION, duration INT)', 
             err => {
                 if(err) {console.log(err); return rej(err)}; 
             });
         pool.query(
-            'CREATE TABLE IF NOT EXISTS stations (fid INT PRIMARY KEY, id INT, nimi VARCHAR(50),'+
+            'CREATE TABLE IF NOT EXISTS raw_stations (fid INT PRIMARY KEY, id INT, nimi VARCHAR(50),'+
             'namn VARCHAR(50), name VARCHAR(50), osoite VARCHAR(50),'+
             'address VARCHAR(50), kaupunki VARCHAR(20), stad VARCHAR(20), Operaattori VARCHAR(50), Kapasiteetti INT,'+
             'location_x VARCHAR(50), location_y VARCHAR(50))',
@@ -43,6 +43,34 @@ async function init() {
                 if(err) {console.log(err); return rej(err)};
                 if(succ) {console.log("pool created"); return acc()}
             });
+    });
+}
+
+async function makeViews(){
+    return new Promise(async(acc, rej) => {
+        
+        // Make a view that excludes too short journeys from raw_data. That way we keep all the data if we need it later.    
+        await pool.query('CREATE OR REPLACE VIEW journeys AS SELECT * FROM raw_journeys WHERE '+
+         'distance > 9 AND distance is not null AND duration > 9 AND duration is not null', err => {
+            if(err) {console.log(err); return rej(err)};
+        })
+ 
+        // Add all station data to the stations view
+        pool.query('CREATE OR REPLACE VIEW stations AS SELECT * FROM raw_stations', (err, succ) => {
+                if(err) {console.log(err); return rej(err)};
+                if(succ) {console.log("views created"); return acc(); }
+        });
+    });
+}
+
+    // Update the stations view to have "Helsinki, Helsingfors, CityBike Finland" to all Helsinki stations missing the
+    // kaupunki, stad, operaattori data. That way we don't alter the original data  
+async function updateViews(){
+    return new Promise(async(acc, rej) => {
+        await pool.query('UPDATE stations SET kaupunki = $1, stad = $2, operaattori = $3 WHERE kaupunki = $4', ["Helsinki", "Helsingfors", "CityBike Finland", " "], (err, succ) => {
+            if(err) {console.log(err); return rej(err)};
+            if(succ) {console.log("views updated"); return acc(); }
+        });
     });
 }
 
@@ -123,14 +151,14 @@ async function truncateTable(tableName){
         params = "(departure, return, departure_id, departure_name, return_id, return_name, distance, duration)"
     }
     return new Promise((acc, rej) => {
-        pool.connect((err, client, done) => {
-            const stream = client.query(copyFrom("COPY "+tableName+params+" FROM STDIN CSV HEADER"));
+        pool.connect((error, client, done) => {
+            const stream = client.query(copyFrom("COPY raw_"+tableName+params+" FROM STDIN CSV HEADER"));
             const filestream = fs.createReadStream(fileName);
-            filestream.on("error", err);
-            stream.on("error", err);
+            filestream.on("error", done);
+            stream.on("error", done);
             stream.on("finish", done);
             filestream.pipe(stream);
-            if(err) {console.log(err); return rej(err)};
+            if(error) {console.log(error); return rej(err)};
             if(done){console.log("done reading file -> "+fileName); acc()}
         });      
     });
@@ -138,4 +166,5 @@ async function truncateTable(tableName){
 
 module.exports = { init, pool, disconnect, getAllStations,
                 getJourneys, getStation, addStation,
-                addJourney, truncateTable, addCSVtoTable };
+                addJourney, truncateTable, addCSVtoTable,
+                makeViews, updateViews };
