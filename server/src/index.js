@@ -21,7 +21,7 @@ app.use(express.json());
 //Routes
 app.get("/stations", getAllStations);
 app.get("/journeys", getJourneys);
-app.get("/stations/:name", getStation);
+app.get("/stations/:id", getStation);
 app.get("*", get404);
 
 // chain functions to start everything on startup

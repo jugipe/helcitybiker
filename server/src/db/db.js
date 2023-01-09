@@ -102,49 +102,49 @@ async function getJourneys() {
     });
 }
 
-async function getStation(name) {
+async function getStation(id) {
     return new Promise((acc, rej) => {
-        pool.query("SELECT * FROM stations WHERE nimi= $1",[name],(err, data) => {
+        pool.query("SELECT * FROM stations WHERE id= $1",[id],(err, data) => {
             if(err) {console.log(err); return rej(err)};
             acc(data);
         });
     });
 }
 
-async function getStationDepInfo(name) {
+async function getStationDepInfo(id) {
     return new Promise((acc, rej) => {
         pool.query("SELECT COUNT(return_name) AS departures, AVG(distance) AS avg_dep_dist FROM journeys "+
-        "WHERE departure_name= $1",[name],(err, data) => {
+        "WHERE departure_id= $1",[id],(err, data) => {
             if(err) {console.log(err); return rej(err)};
             acc(data);
         });
     });
 }
 
-async function getStationRetInfo(name) {
+async function getStationRetInfo(id) {
     return new Promise((acc, rej) => {
         pool.query("SELECT COUNT(departure_name) AS returns, AVG(distance) AS avg_ret_dist FROM journeys "+
-        "WHERE return_name=$1",[name],(err, data) => {
+        "WHERE return_id=$1",[id],(err, data) => {
             if(err) {console.log(err); return rej(err)};
             acc(data);
         });
     });
 }
 
-async function getStationRetTop5Info(name) {
+async function getStationRetTop5Info(id) {
     return new Promise((acc, rej) => {
-        pool.query("SELECT return_name, COUNT(return_name) as top_5_dep FROM journeys WHERE departure_name = $1 "+
-        "GROUP BY return_name ORDER BY top_5_dep DESC LIMIT 5",[name],(err, data) => {
+        pool.query("SELECT return_name, return_id, COUNT(return_name) as top_5_dep FROM journeys WHERE departure_id = $1 "+
+        "GROUP BY return_name, return_id ORDER BY top_5_dep DESC LIMIT 5",[id],(err, data) => {
             if(err) {console.log(err); return rej(err)};
             acc(data);
         });
     });
 }
 
-async function getStationDepTop5Info(name) {
+async function getStationDepTop5Info(id) {
     return new Promise((acc, rej) => {
-        pool.query("SELECT departure_name, COUNT(departure_name) as top_5_ret FROM journeys WHERE return_name = $1 "+
-        "GROUP BY departure_name ORDER BY top_5_ret DESC LIMIT 5",[name],(err, data) => {
+        pool.query("SELECT departure_name, departure_id, COUNT(departure_name) as top_5_ret FROM journeys WHERE return_id = $1 "+
+        "GROUP BY departure_name, departure_id ORDER BY top_5_ret DESC LIMIT 5",[id],(err, data) => {
             if(err) {console.log(err); return rej(err)};
             acc(data);
         });
