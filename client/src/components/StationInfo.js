@@ -6,17 +6,17 @@ import Spinner from "./Spinner";
 const StationInfo = () => {
 
     // Get station id with useParams hook
-    const { name } = useParams();
+    const { id } = useParams();
     const [ stationInfo, setStationInfo ] = useState([]);
     const [ error, setError ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(true);
 
     useEffect(() => {
-        getStationInfoFromApi(name) 
+        getStationInfoFromApi(id) 
             .then(array => setStationInfo(array)) // Api returns an array which we can set up as the stationInfo
             .then(() => setIsLoading(false))
             .catch(err => setError(true))
-    }, [name]);
+    }, [id]);
 
     // loading screen while waiting on api calls
     if(isLoading){return (<Spinner />)}
@@ -65,7 +65,7 @@ const StationInfo = () => {
                             <tbody>
                                 <tr>
                                     {stationInfo[3].map(station => (
-                                        <td><Link className="links" to={"/stationinfo/"+station.departure_name}>{station.departure_name}</Link></td>
+                                        <td><Link className="links" to={"/stationinfo/"+station.departure_id}>{station.departure_name}</Link></td>
                                     ))}
                                 </tr>
                             </tbody>
@@ -79,7 +79,7 @@ const StationInfo = () => {
                             <tbody>
                                 <tr>
                                     {stationInfo[4].map(station => (
-                                        <td><Link className="links" to={"/stationinfo/"+station.return_name}>{station.return_name}</Link></td>
+                                        <td><Link className="links" to={"/stationinfo/"+station.return_id}>{station.return_name}</Link></td>
                                     ))}
                                 </tr>
                             </tbody>

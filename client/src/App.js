@@ -17,7 +17,7 @@ function App() {
         <Routes>
             <Route exact path="/" element={<JourneyList />}></Route>
             <Route exact path="/stations" element={<StationsList />}></Route>
-            <Route exact path="/stationinfo/:name" element={<StationInfo />}></Route>
+            <Route exact path="/stationinfo/:id" element={<StationInfo />}></Route>
             <Route exact path="*" element={<NoPage />}></Route>
         </Routes>
         <Footer />
