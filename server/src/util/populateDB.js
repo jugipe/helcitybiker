@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const db = require("../db/db");
+const urlParse = require("url");
+const https = require("https");
 
 const populateDB = (dir) => {
     // names of the folders that should have the data inside
@@ -8,7 +10,6 @@ const populateDB = (dir) => {
     dirs.forEach(folder => {
         readFiles(dir+folder, folder)
     });
-    console.log("db populated");
 }
 
 const readFiles = (dir, dataType) => {
@@ -34,10 +35,15 @@ const readFiles = (dir, dataType) => {
                 if(isFile && ext === ".csv"){
                     readCSV(filepath, dataType);
                 }
-
             });
         });
-    })
+
+        if(fileNames.length === 0){
+            if(dataType === "stationdata"){
+                downloadStationData(dir);
+            }
+        }
+    });
 }
 
 const readCSV = (filepath, dataType) => {
@@ -51,6 +57,21 @@ const readCSV = (filepath, dataType) => {
         db.addCSVtoTable("journeys", filepath);
     }
     
+}
+
+const downloadStationData = (dir) => {
+    const url = "https://opendata.arcgis.com/datasets/726277c507ef4914b0aec3cbcfcbfafc_0.csv";
+    const file = fs.createWriteStream(dir+"/stations.csv");
+
+    const req = https.get(url, (response) => {
+        response.pipe(file);
+
+        file.on("finish", () => {
+            file.close();
+            console.log("Finished downloading -> "+url);
+            db.addCSVtoTable("stations", file.path)
+        });
+    });
 }
 
 module.exports = populateDB;
