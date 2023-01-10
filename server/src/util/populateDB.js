@@ -41,6 +41,8 @@ const readFiles = (dir, dataType) => {
         if(fileNames.length === 0){
             if(dataType === "stationdata"){
                 downloadStationData(dir);
+            } else if (dataType === "journeydata"){
+                downloadJourneyData(dir);
             }
         }
     });
@@ -71,6 +73,27 @@ const downloadStationData = (dir) => {
             console.log("Finished downloading -> "+url);
             db.addCSVtoTable("stations", file.path)
         });
+    });
+}
+
+const downloadJourneyData = (dir) => {
+    const urls = ["https://dev.hsl.fi/citybikes/od-trips-2021/2021-05.csv",
+                  "https://dev.hsl.fi/citybikes/od-trips-2021/2021-06.csv",
+                  "https://dev.hsl.fi/citybikes/od-trips-2021/2021-07.csv"]
+
+    urls.forEach(url => {
+        const parsed = urlParse.parse(url);
+        const file = fs.createWriteStream(dir+"/"+path.basename(parsed.pathname));
+        
+        const req = https.get(url, (response) => {
+            response.pipe(file);
+
+            file.on("finish", () => {
+                file.close();
+                console.log("Finished downloading -> "+url);
+                db.addCSVtoTable("journeys", file.path);
+            })
+        })
     });
 }
 
