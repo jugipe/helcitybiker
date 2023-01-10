@@ -34,7 +34,7 @@ async function createDbTablesIfNotExists(){
             'departure TIMESTAMP, return TIMESTAMP, departure_id INT, departure_name VARCHAR(50),'+ 
             'return_id INT, return_name VARCHAR(50), distance DOUBLE PRECISION, duration INT)', 
             err => {
-                if(err) {console.log(err); return rej(err)}; 
+                if(err) {console.log(err);}; 
             }),
         pool.query(
             'CREATE TABLE IF NOT EXISTS raw_stations (fid INT PRIMARY KEY, id INT, nimi VARCHAR(50),'+
@@ -42,7 +42,7 @@ async function createDbTablesIfNotExists(){
             'address VARCHAR(50), kaupunki VARCHAR(20), stad VARCHAR(20), Operaattori VARCHAR(50), Kapasiteetti INT,'+
             'location_x VARCHAR(50), location_y VARCHAR(50))',
             (err, succ) => {
-                if(err) {console.log(err); return rej(err)};
+                if(err) {console.log(err);};
                 if(succ) {console.log("--Tables created")}
             })
     ]);
@@ -54,12 +54,12 @@ async function makeViews(){
         // Make a view that excludes too short journeys from raw_data. That way we keep all the data if we need it later.    
         pool.query('CREATE OR REPLACE VIEW journeys AS SELECT * FROM raw_journeys WHERE '+
          'distance > 9 AND distance is not null AND duration > 9 AND duration is not null', err => {
-            if(err) {console.log(err); return rej(err)};
+            if(err) {console.log(err);};
         }),
  
         // Add all station data to the stations view
         pool.query('CREATE OR REPLACE VIEW stations AS SELECT * FROM raw_stations', (err, succ) => {
-                if(err) {console.log(err); return rej(err)};
+                if(err) {console.log(err);};
                 if(succ) {console.log("--Views created")}
         })
     ]);
@@ -195,7 +195,7 @@ async function truncateTable(tableName){
     });
 }
 
- async function addCSVtoTable(tableName, fileName){
+async function addCSVtoTable(tableName, fileName){
     let params = "";
     if(tableName === "journeys"){
 
@@ -212,7 +212,7 @@ async function truncateTable(tableName){
             stream.on("finish", done);
             filestream.pipe(stream);
             if(error) {console.log(error); return rej(err)};
-            if(done){console.log("done reading file -> "+fileName); acc()}
+            if(done){console.log("done reading file -> "+fileName+" to database"); acc()}
         });      
     });
 }
