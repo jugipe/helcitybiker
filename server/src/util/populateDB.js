@@ -48,15 +48,15 @@ const readFiles = (dir, dataType) => {
     });
 }
 
-const readCSV = (filepath, dataType) => {
+const readCSV = async(filepath, dataType) => {
     
     // differentiate the tables with datatype and add them to table 
     if(dataType === "stationdata"){
-        db.addCSVtoTable("stations", filepath);
+        await db.addCSVtoTable("stations", filepath);
     }
 
     if(dataType === "journeydata"){
-        db.addCSVtoTable("journeys", filepath);
+        await db.addCSVtoTable("journeys", filepath);
     }
     
 }
@@ -76,15 +76,18 @@ const downloadStationData = (dir) => {
     });
 }
 
-const downloadJourneyData = (dir) => {
+const downloadJourneyData = async(dir) => {
     const urls = ["https://dev.hsl.fi/citybikes/od-trips-2021/2021-05.csv",
                   "https://dev.hsl.fi/citybikes/od-trips-2021/2021-06.csv",
                   "https://dev.hsl.fi/citybikes/od-trips-2021/2021-07.csv"]
 
-    urls.forEach(url => {
-        const parsed = urlParse.parse(url);
+    for (const u of urls){
+
+        const parsed = urlParse.parse(u);
         const file = fs.createWriteStream(dir+"/"+path.basename(parsed.pathname));
-        
+
+        let url = await followURLredirect(u);
+
         const req = https.get(url, (response) => {
             response.pipe(file);
 
@@ -94,7 +97,22 @@ const downloadJourneyData = (dir) => {
                 db.addCSVtoTable("journeys", file.path);
             })
         })
-    });
+    }
+}
+
+const followURLredirect = (url) => {
+    return new Promise((res, rej) => {
+        https.get(url, response => {
+
+            if(response.statusCode === 307 ){
+                return res(followURLredirect(response.headers.location));
+            }
+        
+            if(response.statusCode === 200){
+                return res(url);
+            }
+        })
+    })
 }
 
 module.exports = populateDB;
