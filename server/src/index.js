@@ -25,19 +25,23 @@ app.get("/stations/:id", getStation);
 app.get("*", get404);
 
 // chain functions to start everything on startup
-db.init().then(async() => {    
+db.init().then(() => {
+    
+    db.createDbTablesIfNotExists();
+
+    }).then(() => {
     
     if(process.env.NODE_ENV_POPULATE === "true"){
 
-        await populateDB(path.join(__dirname, "/files/"));
+        populateDB(path.join(__dirname, "/files/"));
 
-    }}).then(async() => {
+    }}).then(() => {
 
-        await db.makeViews();
+        db.makeViews();
 
-    }).then(async() => {
+    }).then(() => {
 
-        await db.updateViews();
+        db.updateStationsWithCity();
     
     }).then(() => {
 

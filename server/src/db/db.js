@@ -25,15 +25,17 @@ async function init() {
         host,
         database
     });
+}
 
-    return new Promise(async(acc, rej) => {
-        await pool.query(
+async function createDbTablesIfNotExists(){
+    return Promise.all([
+        pool.query(
             'CREATE TABLE IF NOT EXISTS raw_journeys (id SERIAL PRIMARY KEY,'+
             'departure TIMESTAMP, return TIMESTAMP, departure_id INT, departure_name VARCHAR(50),'+ 
             'return_id INT, return_name VARCHAR(50), distance DOUBLE PRECISION, duration INT)', 
             err => {
                 if(err) {console.log(err); return rej(err)}; 
-            });
+            }),
         pool.query(
             'CREATE TABLE IF NOT EXISTS raw_stations (fid INT PRIMARY KEY, id INT, nimi VARCHAR(50),'+
             'namn VARCHAR(50), name VARCHAR(50), osoite VARCHAR(50),'+
@@ -41,35 +43,35 @@ async function init() {
             'location_x VARCHAR(50), location_y VARCHAR(50))',
             (err, succ) => {
                 if(err) {console.log(err); return rej(err)};
-                if(succ) {console.log("pool created"); return acc()}
-            });
-    });
+                if(succ) {console.log("--Tables created")}
+            })
+    ]);
 }
 
 async function makeViews(){
-    return new Promise(async(acc, rej) => {
+    return Promise.all([
         
         // Make a view that excludes too short journeys from raw_data. That way we keep all the data if we need it later.    
-        await pool.query('CREATE OR REPLACE VIEW journeys AS SELECT * FROM raw_journeys WHERE '+
+        pool.query('CREATE OR REPLACE VIEW journeys AS SELECT * FROM raw_journeys WHERE '+
          'distance > 9 AND distance is not null AND duration > 9 AND duration is not null', err => {
             if(err) {console.log(err); return rej(err)};
-        })
+        }),
  
         // Add all station data to the stations view
         pool.query('CREATE OR REPLACE VIEW stations AS SELECT * FROM raw_stations', (err, succ) => {
                 if(err) {console.log(err); return rej(err)};
-                if(succ) {console.log("views created"); return acc(); }
-        });
-    });
+                if(succ) {console.log("--Views created")}
+        })
+    ]);
 }
 
-    // Update the stations view to have "Helsinki, Helsingfors, CityBike Finland" to all Helsinki stations missing the
-    // kaupunki, stad, operaattori data. That way we don't alter the original data  
-async function updateViews(){
-    return new Promise(async(acc, rej) => {
-        await pool.query('UPDATE stations SET kaupunki = $1, stad = $2, operaattori = $3 WHERE kaupunki = $4', ["Helsinki", "Helsingfors", "CityBike Finland", " "], (err, succ) => {
+    // Update the stations to have "Helsinki, Helsingfors, CityBike Finland" to all Helsinki stations missing the
+    // kaupunki, stad, operaattori data. 
+async function updateStationsWithCity(){
+    return new Promise((acc, rej) => {
+        pool.query('UPDATE raw_stations SET kaupunki = $1, stad = $2, operaattori = $3 WHERE kaupunki = $4', ["Helsinki", "Helsingfors", "CityBike Finland", " "], (err, succ) => {
             if(err) {console.log(err); return rej(err)};
-            if(succ) {console.log("views updated"); return acc(); }
+            if(succ) {console.log("--Station table updated"); return acc(); }
         });
     });
 }
@@ -160,6 +162,8 @@ async function getStationDepTop5Info(id) {
     });
 }
 
+/* 
+REMOVE THESE IF NO USE IN FINAL
 async function addStation(fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y){
     return new Promise((acc, rej) => {
         pool.query("INSERT INTO raw_stations(fid, id, nimi, namn, name, osoite, address, kaupunki, stad,"+
@@ -180,7 +184,7 @@ async function addJourney(departure_time, return_time, dep_station_id, dep_stati
                 acc();
             });    
     });
-}
+}*/
 
 async function truncateTable(tableName){
     return new Promise((acc, rej) => {
@@ -197,7 +201,7 @@ async function truncateTable(tableName){
 
         // If we are reading the stream to journeys we need to give the params, because of serialization of id in journey table, 
         // otherwise query thinks departure is id
-        params = "(departure, return, departure_id, departure_name, return_id, return_name, distance, duration)"
+        params = "(departure, return, departure_id, departure_name, return_id, return_name, distance, duration)";
     }
     return new Promise((acc, rej) => {
         pool.connect((error, client, done) => {
@@ -213,9 +217,9 @@ async function truncateTable(tableName){
     });
 }
 
-module.exports = { init, pool, disconnect, getAllStations,
-                getJourneys, getStation, addStation,
-                addJourney, truncateTable, addCSVtoTable,
-                makeViews, updateViews, getStationDepInfo,
+module.exports = { init, createDbTablesIfNotExists, disconnect, 
+                getAllStations, getJourneys, getStation,
+                truncateTable, addCSVtoTable, makeViews, 
+                updateStationsWithCity, getStationDepInfo,
                 getStationRetInfo, getStationDepTop5Info,
                 getStationRetTop5Info, getJourneyCount };
