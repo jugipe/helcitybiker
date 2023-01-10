@@ -6,6 +6,7 @@ const path = require("path");
 const populateDB = require("../src/util/populateDB");
 
 const should = chai.should();
+const expect = chai.expect();
 chai.use(chaiHttp);
 
 describe("Express server", () =>{
@@ -65,11 +66,11 @@ describe("Express server", () =>{
                 done();
             });
         });
-        it("it should return a json array", (done) => {
+        it("it should return a object", (done) => {
             chai.request(api)
                 .get("/journeys")
                 .end((err, res) => {
-                    res.body.should.be.a("array");
+                    res.body.should.be.a("object");
                 done();
             });
         });
@@ -77,7 +78,8 @@ describe("Express server", () =>{
             chai.request(api)
                 .get("/journeys")
                 .end((err, res) => {
-                    res.body.length.should.be.equal(5);
+                    const data = res.body.journeys;
+                    data.length.should.be.equal(5);
                 done();
             });
         });
@@ -86,40 +88,42 @@ describe("Express server", () =>{
     describe("/GET a station",  () => {
 
         // Get the first station name of known data
-        const firstStationName = "Test1"
+        const firstStationId = 101
 
         it("it should have status 200", (done) => {
             chai.request(api)
-                .get("/stations/"+firstStationName)
+                .get("/stations/"+firstStationId)
                 .end((err, res) => {
                     res.should.have.status(200);
                 done();
             });
         });
-        it("it should return a json array", (done) => {
+        it("it should return a object", (done) => {
             chai.request(api)
-                .get("/stations/"+firstStationName)
+                .get("/stations/"+firstStationId)
                 .end((err, res) => {
-                    res.body.should.be.a("array");
+                    res.body.should.be.a("object");
                 done();
             });
         });
         it("it should GET only one station", (done) => {
             chai.request(api)
-                .get("/stations/"+firstStationName)
+                .get("/stations/"+firstStationId)
                 .end((err, res) => {
-                    res.body.length.should.be.equal(1);
+                    res.body.info.should.be.a("object")
+                    Object.keys(res.body.info).length.should.be.equal(13)
                 done();
             });
         });
         it("it should GET station info", (done) => {
             chai.request(api)
-                .get("/stations/"+firstStationName)
+                .get("/stations/"+firstStationId)
                 .end((err, res) => {
                     // res body should be only len 1, so we can take the first element
                     // and test against it
-                    const data = res.body[0];
-                    data.should.include({nimi: firstStationName})
+                    const data = res.body.info;
+                    data.should.include({id: firstStationId});
+                    data.should.include({nimi: "Test1"});
                 done();
             });
         });
@@ -128,11 +132,12 @@ describe("Express server", () =>{
     describe("/GET a non-existent station",  () => {
         it("it should not GET station info", (done) => {
             chai.request(api)
-                .get("/stations/nonexistingstation")
+                .get("/stations/1511984148")
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.should.not.be.a("array");
-                    res.body.should.be.empty;
+                    res.body.should.not.have.keys("info");
+                    res.body.departureStats.departures.should.be.equal("0");
                 done();
             });
         });
@@ -144,7 +149,7 @@ describe("Express server", () =>{
                 .get("/nonexistingroute")
                 .end((err, res) => {
                     res.should.have.status(404);
-                    done();
+                done();
             });
         });
     });

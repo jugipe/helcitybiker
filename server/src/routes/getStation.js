@@ -12,9 +12,18 @@ const getStation = async (req, res) => {
         db.getStationRetInfo(id).then(data => data.rows).then(rows => rows[0]),
         db.getStationDepTop5Info(id).then(data => data.rows),
         db.getStationRetTop5Info(id).then(data => data.rows),
-    ]);
+    ]).catch(err => res.send(404));
 
-    res.send(array);
+    // Wrap the data into an object before sending response
+    const wrapped = {
+        info: array[0],
+        departureStats: array[1],
+        returnStats: array[2],
+        top5dep: array[3],
+        top5ret: array[4]
+    }
+
+    res.send(wrapped);
 };
 
 module.exports = getStation;
