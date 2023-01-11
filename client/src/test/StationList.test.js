@@ -48,8 +48,10 @@ describe("StationList Component", () => {
 
       async () => render(<BrowserRouter><StationList/></BrowserRouter>);
       
-      await act(() => {
+      await act(async() => {
+        await(() => {
           screen.findByText("Unable to fetch data");
+        })
       })
     });
 });

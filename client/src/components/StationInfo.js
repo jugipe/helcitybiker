@@ -63,7 +63,7 @@ const StationInfo = () => {
                                 </thead>
                                 <tbody>
                                 {stationInfo.top5dep.map(station => (
-                                    <tr><Link className="links" to={"/stationinfo/"+station.departure_id}>{station.departure_name}</Link></tr>
+                                    <tr key={station.departure_id}><td><Link className="links" to={"/stations/"+station.departure_id}>{station.departure_name}</Link></td></tr>
                                 ))}
                                 </tbody>
                             </table>
@@ -75,7 +75,7 @@ const StationInfo = () => {
                                 </thead>
                                 <tbody>
                                     {stationInfo.top5ret.map(station => (
-                                        <tr><Link className="links" to={"/stationinfo/"+station.return_id}>{station.return_name}</Link></tr>
+                                        <tr key={station.return_id}><td><Link className="links" to={"/stations/"+station.return_id}>{station.return_name}</Link></td></tr>
                                     ))}
                                 </tbody>
                             </table>
