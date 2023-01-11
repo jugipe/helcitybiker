@@ -20,7 +20,6 @@ function App() {
             <Route exact path="/stations/:id" element={<StationInfo />}></Route>
             <Route exact path="*" element={<NoPage />}></Route>
         </Routes>
-        <Footer />
       </div>
     </Router>
   );
