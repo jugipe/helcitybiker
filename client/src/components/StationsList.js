@@ -39,12 +39,12 @@ const StationList = () => {
 
     return (
         <div className="container">
-            <h1 className="mt-3 h1">City Bike Stations</h1>
+            <h1 className="mt-3 h1">CITY BIKE STATIONS</h1>
             <table className="table table-sm table-dark table-striped table-hover table mt-4">
                 <thead>
                 <tr>
-                    <th>Station name</th>
-                    <th>Address</th>
+                    <th className="w-50">Station name</th>
+                    <th className="w-50">Address</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -56,16 +56,24 @@ const StationList = () => {
                     ))}
                 </tbody>
             </table>
-            <ReactPaginate className="pagination justify-content-center mt-2"
+            <ReactPaginate 
                     onPageChange={paginate}
-                    pageCount={Math.ceil(stations.length / stationsPerPage)}
-                    previousLabel={"Prev"}
-                    nextLabel={'Next'}
-                    containerClassName={'pagination'}
-                    pageLinkClassName={'page-number'}
-                    previousLinkClassName={'page-number'}
-                    nextLinkClassName={'page-number'}
-                    activeLinkClassName={'active'}
+                    pageCount={Math.ceil(Number(stations.length) / stationsPerPage)}
+                    previousLabel="Prev"
+                    nextLabel='Next'
+                    breakLabel="..."
+                    breakLinkClassName="page-link"
+                    breakClassName="page-item"
+                    pageRangeDisplayed="3"
+                    marginPagesDisplayed="1"
+                    containerClassName="pagination pagination-sm justify-content-center mt-3"
+                    pageClassName="page-item"
+                    pageLinkClassName="page-link"
+                    previousClassName="page-item"
+                    previousLinkClassName="page-link"
+                    nextClassName="page-item"
+                    nextLinkClassName="page-link"
+                    activeLinkClassName="active"
             />
         </div>
     )
