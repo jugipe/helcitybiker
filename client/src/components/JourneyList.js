@@ -39,9 +39,9 @@ const JourneyList = () => {
     if(data.journeys === undefined || data.journeys.length === 0){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
     return (
-        <div className="container">
-            <h1 className="mt-3 h1">CITY BIKE JOURNEYS</h1>
-            <table className="table table-sm table-dark table-striped table-hover table mt-4">
+        <div className="container text-center">
+            <h1 className="mt-2 h1">CITY BIKE JOURNEYS</h1>
+            <table className="table table-sm table-dark table-striped table-hover table mt-3">
                 <thead>
                 <tr>
                     <th className="w-25">Departure station</th>

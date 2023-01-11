@@ -38,9 +38,9 @@ const StationList = () => {
     }
 
     return (
-        <div className="container">
-            <h1 className="mt-3 h1">CITY BIKE STATIONS</h1>
-            <table className="table table-sm table-dark table-striped table-hover table mt-4">
+        <div className="container text-center">
+            <h1 className="mt-2 h1">CITY BIKE STATIONS</h1>
+            <table className="table table-sm table-dark table-striped table-hover table mt-3">
                 <thead>
                 <tr>
                     <th className="w-50">Station name</th>

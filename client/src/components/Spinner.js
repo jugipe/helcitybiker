@@ -1,7 +1,7 @@
 const Spinner = () => {
   return (
-    <div className="container mt-3 stationInfoCard">
-        <div className="spinner-border">
+    <div className="text-center justify-content-center container mt-3 stationInfoCard">
+        <div className="spinner-border justify-content-center">
         </div>
     </div>
   );
