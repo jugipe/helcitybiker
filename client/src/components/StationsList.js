@@ -50,7 +50,7 @@ const StationList = () => {
                 <tbody>
                     {currentStationList.map(station => (
                     <tr key={station.id}>
-                        <td><Link className="links" to={"/stationinfo/"+station.id}>{station.nimi}</Link></td>
+                        <td><Link className="links" to={"/stations/"+station.id}>{station.nimi}</Link></td>
                         <td className="text">{station.osoite}</td>
                     </tr>
                     ))}

@@ -53,8 +53,8 @@ const JourneyList = () => {
                 <tbody>
                     {data.journeys.map(journey => (
                     <tr key={journey.id}>
-                        <td ><Link className="links" to={"/stationinfo/"+journey.departure_id}>{journey.departure_name}</Link></td>
-                        <td ><Link className="links" to={"/stationinfo/"+journey.return_id}>{journey.return_name}</Link></td>
+                        <td ><Link className="links" to={"/stations/"+journey.departure_id}>{journey.departure_name}</Link></td>
+                        <td ><Link className="links" to={"/stations/"+journey.return_id}>{journey.return_name}</Link></td>
                         <td className="text">{journey.distance} m</td>
                         <td className="text">{journey.duration} s</td>
                     </tr>
