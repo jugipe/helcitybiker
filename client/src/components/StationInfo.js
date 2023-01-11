@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getStationInfoFromApi } from "../api/getStationInfoFromApi";
 import Spinner from "./Spinner";
+import Map from "./Map";
 
 const StationInfo = () => {
 
@@ -29,16 +30,16 @@ const StationInfo = () => {
 
 
     return (
-        <div>
-            <h1 className="h1 mt-3">{stationInfo.info.nimi}</h1>
-            <div className="container d-flex flex-row mt-2 d-inline-block flex-row">
-                <div className="stationInfoCard d-flex mt-2 w-50 flex-column">
+        <div className="container mt-2">
+            <h1 className="h1">{stationInfo.info.nimi.toUpperCase()}</h1>
+            <div className="d-flex flex-row flex-wrap">
+                <div className="d-flex w-50 h-100 flex-column flex-wrap">
                     <h2 className="h2">{stationInfo.info.osoite}</h2>
                     <h3 className="h3">{stationInfo.info.kaupunki}</h3>
-                    <div className="d-flex flex-column mt-3">
-                        <table className="table flex-row">
+                    <div className="d-flex flex-column px-3">
+                        <table className="small text-center table flex-row">
                             <thead>
-                                <tr>
+                                <tr className="w-25">
                                     <th>Total Departures</th>
                                     <th>Total Returns</th>
                                     <th>Average Departure Distance</th>
@@ -54,8 +55,8 @@ const StationInfo = () => {
                                 </tr>
                             </tbody>
                         </table>
-                        <div className="d-flex flex-row mt-3">
-                            <table className="table w-50 ml-2">
+                        <div className="small d-flex flex-row flex-wrap">
+                            <table className="table w-50">
                                 <thead>
                                     <tr>
                                         <th>Top 5 Departures</th>
@@ -63,11 +64,11 @@ const StationInfo = () => {
                                 </thead>
                                 <tbody>
                                 {stationInfo.top5dep.map(station => (
-                                    <tr key={station.departure_id}><td><Link className="links" to={"/stations/"+station.departure_id}>{station.departure_name}</Link></td></tr>
+                                    <tr key={station.departure_id}><td><Link className="infolinks" to={"/stations/"+station.departure_id}>{station.departure_name}</Link></td></tr>
                                 ))}
                                 </tbody>
                             </table>
-                            <table className="table w-50">
+                            <table className="table w-50 min-w-50">
                                 <thead>
                                     <tr>
                                         <th>Top 5 Returns</th>
@@ -75,16 +76,18 @@ const StationInfo = () => {
                                 </thead>
                                 <tbody>
                                     {stationInfo.top5ret.map(station => (
-                                        <tr key={station.return_id}><td><Link className="links" to={"/stations/"+station.return_id}>{station.return_name}</Link></td></tr>
+                                        <tr key={station.return_id}><td><Link className="infolinks" to={"/stations/"+station.return_id}>{station.return_name}</Link></td></tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                <div className="stationInfoCard d-inline-flex p2 w-50 justify-content-center flex-column bg-warning">
-                    <p className="text">Map placeholder</p>
-                </div>
+                    <Map 
+                        lat={stationInfo.info.location_y}
+                        long={stationInfo.info.location_x}
+                        label={stationInfo.info.nimi}
+                        address={stationInfo.info.osoite}/>
             </div>
         </div>
     )
