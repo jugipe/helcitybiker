@@ -32,7 +32,7 @@ const StationInfo = () => {
     return (
         <div className="container mt-2">
             <h1 className="h1">{stationInfo.info.nimi.toUpperCase()}</h1>
-            <div className="d-flex flex-row flex-wrap">
+            <div className="d-flex flex-wrap justify-content-start">
                 <div className="d-flex w-50 h-100 flex-column flex-wrap">
                     <h2 className="h2">{stationInfo.info.osoite}</h2>
                     <h3 className="h3">{stationInfo.info.kaupunki}</h3>
