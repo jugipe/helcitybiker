@@ -4,8 +4,7 @@ import { useEffect } from "react";
 function Map({lat, long, label, address}){
     return (
         <MapContainer
-        className="mt-4" 
-        style = {{width: "auto", height: "450px"}}
+        style = {{width: "50%", minWidth: "400px", minHeight: "100%", height: "430px"}}
         center={[lat, long]} 
         zoom={14} 
         scrollWheelZoom={false} 
@@ -28,28 +27,9 @@ const RecenterAutomatically = ({lat,long}) => {
     const map = useMap();
      useEffect(() => {
        map.setView([lat, long]);
-     }, [lat, long]);
+     }, [map, lat, long]);
      return null;
 }
-
-
-
-        /*
-        <MapContainer
-            center={[lat, long]}
-            zoom={11}
-            scrollWheelZoom={false}
-            style={{ width: '100%', height: '210px' }}
-            >
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={lat, long}>
-                <Popup>{`${label}`}</Popup>
-            </Marker>
-        </MapContainer>*/
-
 
 export default Map;
   
