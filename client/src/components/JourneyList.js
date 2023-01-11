@@ -5,7 +5,7 @@ import Spinner from "./Spinner";
 import ReactPaginate from 'react-paginate';
 
 const JourneyList = () => {
-    const [ journeys, setJourneys ] = useState([]);
+    const [ data, setData ] = useState([]);
     const [ error, setError ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(true);
 
@@ -17,7 +17,7 @@ const JourneyList = () => {
 
     useEffect(() => {
         getJourneysFromApi(indexOfFirstJourney, journeysPerPage)
-            .then(setJourneys)
+            .then(setData)
             .then(() => setIsLoading(false))
             .catch(err => setError(true))
     }, [indexOfFirstJourney, journeysPerPage]);
@@ -36,7 +36,7 @@ const JourneyList = () => {
     if(error){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
     // return error message if API call returns no data
-    if(journeys[0].length === 0){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
+    if(data.journeys === undefined || data.journeys.length === 0){return (<h1 className="mt-3 h1 stationInfoCard">Unable to fetch data</h1>)}
 
     return (
         <div className="container">
@@ -51,7 +51,7 @@ const JourneyList = () => {
                 </tr>
                 </thead>
                 <tbody>
-                    {journeys[0].map(journey => (
+                    {data.journeys.map(journey => (
                     <tr key={journey.id}>
                         <td ><Link className="links" to={"/stationinfo/"+journey.departure_id}>{journey.departure_name}</Link></td>
                         <td ><Link className="links" to={"/stationinfo/"+journey.return_id}>{journey.return_name}</Link></td>
@@ -63,7 +63,7 @@ const JourneyList = () => {
             </table>
             <ReactPaginate 
                     onPageChange={paginate}
-                    pageCount={Math.ceil(Number(journeys[1].total) / journeysPerPage)}
+                    pageCount={Math.ceil(Number(data.total) / journeysPerPage)}
                     previousLabel="Prev"
                     nextLabel='Next'
                     breakLabel="..."

@@ -15,8 +15,8 @@ describe("JourneyList Component", () => {
   
     it("should render journeys when api responds", async () => {
 
-      getJourneysFromApi.mockResolvedValue([{"id": 1, "departure": "2021-05-31T23:57:25", "return": "2021-06-01T00:05:46",
-       "departure_id":101, "departure_name": "Test1", "return_id": 102, "return_name": "Test2", "distance": 2043, "duration": 500}]);
+      getJourneysFromApi.mockResolvedValue({journeys: [{"id": 1, "departure": "2021-05-31T23:57:25", "return": "2021-06-01T00:05:46",
+       "departure_id":101, "departure_name": "Test1", "return_id": 102, "return_name": "Test2", "distance": 2043, "duration": 500}], total: "1"});
 
       // Render the component
       render(<BrowserRouter><JourneyList/></BrowserRouter>);
@@ -34,7 +34,7 @@ describe("JourneyList Component", () => {
 
 
     it("should render error when api returns an empty array", async () => {
-      getJourneysFromApi.mockResolvedValue([]);
+      getJourneysFromApi.mockResolvedValue({});
         
       render(<BrowserRouter><JourneyList/></BrowserRouter>);
       
