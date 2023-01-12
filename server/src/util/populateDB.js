@@ -7,6 +7,10 @@ const https = require("https");
 const populateDB = async(dir) => {
     // names of the folders that have the data inside
         const folders = ["stationdata", "journeydata"];
+
+        const tables = ["raw_stations", "raw_journeys"];
+
+        tables.forEach(table => db.truncateTable(table));
         const promiseList = folders.map(folder => {readFiles(dir+folder, folder)})
         return await Promise.all(promiseList).then(() => {return "--Database populated--"});
 }
