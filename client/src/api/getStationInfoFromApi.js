@@ -1,5 +1,5 @@
-export const getStationInfoFromApi = (stationName) => {
-    return fetch(process.env.REACT_APP_API_HOST+"/stations/"+stationName).then((response) => {
+export const getStationInfoFromApi = (id) => {
+    return fetch("http://localhost:9001/stations/"+id).then((response) => {
       if (response.status === 200) return response.json();
       else throw new Error("Invalid response");
     });

@@ -2,11 +2,26 @@ import { render, screen, act, waitFor } from "@testing-library/react";
 import StationInfo from "../components/StationInfo";
 import { getStationInfoFromApi } from "../api/getStationInfoFromApi";
 import { BrowserRouter } from "react-router-dom";
+import { Map } from "../components/Map"
 
 /**
  * Mock the api module
  */
 jest.mock("../api/getStationInfoFromApi");
+
+/**
+ * Mock the Map child component
+ */
+jest.mock("../components/Map", () => {
+  return { __esModule: true,
+    default: () => {
+      return <div/>;
+    },
+    Map: () => {
+      return <div/>;
+    },
+  }
+});
 
 describe("StationInfo Component", () => {
 
