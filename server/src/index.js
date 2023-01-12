@@ -7,7 +7,8 @@ const getAllStations = require("./routes/getAllStations");
 const getJourneys = require("./routes/getJourneys");
 const getStation = require("./routes/getStation");
 const get404 = require("./routes/get404");
-
+const addStation = require("./routes/addStation");
+const addJourney = require("./routes/addJourney");
 
 const app = express();
 const port =  process.env.API_PORT || 9001;
@@ -20,6 +21,7 @@ app.use(express.json());
 app.get("/stations", getAllStations);
 app.get("/journeys", getJourneys);
 app.get("/stations/:id", getStation);
+app.post("/stations", addStation);
 app.get("*", get404);
 
 // launch app with start function
