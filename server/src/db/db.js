@@ -33,8 +33,8 @@ async function createDbTablesIfNotExists(){
         new Promise((res, rej) => {
             pool.query(
                 'CREATE TABLE IF NOT EXISTS raw_journeys (id SERIAL PRIMARY KEY,'+
-                'departure TIMESTAMP, return TIMESTAMP, departure_id INT, departure_name VARCHAR(50),'+ 
-                'return_id INT, return_name VARCHAR(50), distance DOUBLE PRECISION, duration INT)', 
+                'departure TIMESTAMP NOT NULL, return TIMESTAMP NOT NULL, departure_id INT NOT NULL, departure_name VARCHAR(50) NOT NULL,'+ 
+                'return_id INT NOT NULL, return_name VARCHAR(50) NOT NULL, distance DOUBLE PRECISION NOT NULL, duration INT NOT NULL)', 
                 err => {
                     if(err) rej(err.message);
                     res("raw_journeys created")
@@ -42,10 +42,10 @@ async function createDbTablesIfNotExists(){
         }),
         new Promise((res, rej) => {
             pool.query(
-            'CREATE TABLE IF NOT EXISTS raw_stations (fid INT PRIMARY KEY, id INT, nimi VARCHAR(50),'+
-            'namn VARCHAR(50), name VARCHAR(50), osoite VARCHAR(50),'+
-            'address VARCHAR(50), kaupunki VARCHAR(20), stad VARCHAR(20), Operaattori VARCHAR(50), Kapasiteetti INT,'+
-            'location_x VARCHAR(50), location_y VARCHAR(50))',
+            'CREATE TABLE IF NOT EXISTS raw_stations (fid INT PRIMARY KEY NOT NULL, id INT NOT NULL, nimi VARCHAR(50) NOT NULL,'+
+            'namn VARCHAR(50), name VARCHAR(50), osoite VARCHAR(50) NOT NULL,'+
+            'address VARCHAR(50) NOT NULL, kaupunki VARCHAR(20), stad VARCHAR(20), Operaattori VARCHAR(50), Kapasiteetti INT NOT NULL,'+
+            'location_x VARCHAR(50) NOT NULL, location_y VARCHAR(50) NOT NULL)',
             err => {
                 if(err) rej(err.message);
                 res("raw_stations created")
@@ -131,6 +131,27 @@ async function getStation(id) {
     });
 }
 
+async function addStation(fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y){
+    return new Promise((acc, rej) => {
+        pool.query("INSERT INTO raw_stations(fid, id, nimi, namn, name, osoite, address, kaupunki, stad,"+
+         "operaattori, kapasiteetti, location_x, location_y) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *", 
+         [fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y], (err, data) => {
+            if(err) {rej(err.message)};
+            acc(data);
+         });
+    });
+}
+async function addJourney(departure_time, return_time, dep_station_id, dep_station_name, ret_station_id, ret_station_name, distance, duration){
+    return new Promise((acc, rej) => {
+        pool.query("INSERT INTO raw_journeys(id, departure, return, departure_id, departure_name, return_id, return_name, distance, duration)"+
+        "VALUES(DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8) RETURNING *", [departure_time, return_time, dep_station_id, dep_station_name, ret_station_id, 
+            ret_station_name, distance, duration], (err, data) => {
+                if(err) rej(err.message);
+                acc(data);
+            });    
+    });
+}
+
 async function getStationDepInfo(id) {
     return new Promise((res, rej) => {
         pool.query("SELECT COUNT(return_name) AS departures, AVG(distance) AS avg_dep_dist FROM journeys "+
@@ -206,4 +227,5 @@ module.exports = { init, createDbTablesIfNotExists, disconnect,
                 truncateTable, addCSVtoTable, makeViews, 
                 updateStationsWithCity, getStationDepInfo,
                 getStationRetInfo, getStationDepTop5Info,
-                getStationRetTop5Info, getJourneyCount };
+                getStationRetTop5Info, getJourneyCount,
+                addStation, addJourney };
