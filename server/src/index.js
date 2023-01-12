@@ -22,6 +22,7 @@ app.get("/stations", getAllStations);
 app.get("/journeys", getJourneys);
 app.get("/stations/:id", getStation);
 app.post("/stations", addStation);
+app.post("/journeys", addJourney);
 app.get("*", get404);
 
 // launch app with start function
