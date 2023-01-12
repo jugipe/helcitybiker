@@ -59,24 +59,24 @@ const StationInfo = () => {
                             <table className="table w-50">
                                 <thead>
                                     <tr>
-                                        <th>Top 5 Departures</th>
+                                        <th>Most Departures To</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {stationInfo.top5dep.map(station => (
-                                    <tr key={station.departure_id}><td><Link className="infolinks" to={"/stations/"+station.departure_id}>{station.departure_name}</Link></td></tr>
+                                {stationInfo.top5ret.map(station => (
+                                    <tr key={station.return_id}><td><Link className="infolinks" to={"/stations/"+station.return_id}>{station.return_name}</Link></td></tr>
                                 ))}
                                 </tbody>
                             </table>
                             <table className="table w-50 min-w-50">
                                 <thead>
                                     <tr>
-                                        <th>Top 5 Returns</th>
+                                        <th>Most Returns From</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {stationInfo.top5ret.map(station => (
-                                        <tr key={station.return_id}><td><Link className="infolinks" to={"/stations/"+station.return_id}>{station.return_name}</Link></td></tr>
+                                    {stationInfo.top5dep.map(station => (
+                                        <tr key={station.departure_id}><td><Link className="infolinks" to={"/stations/"+station.departure_id}>{station.departure_name}</Link></td></tr>
                                     ))}
                                 </tbody>
                             </table>
