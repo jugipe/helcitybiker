@@ -15,7 +15,7 @@ const getStation = async (req, res) => {
     ]).catch(err => res.send(404));
 
     // Wrap the data into an object before sending response
-    const wrapped = {
+    const station = {
         info: array[0],
         departureStats: array[1],
         returnStats: array[2],
@@ -23,7 +23,7 @@ const getStation = async (req, res) => {
         top5ret: array[4]
     }
 
-    res.send(wrapped);
+    res.send(station);
 };
 
 module.exports = getStation;
