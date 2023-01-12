@@ -34,7 +34,7 @@ async function createDbTablesIfNotExists(){
             pool.query(
                 'CREATE TABLE IF NOT EXISTS raw_journeys (id SERIAL PRIMARY KEY,'+
                 'departure TIMESTAMP NOT NULL, return TIMESTAMP NOT NULL, departure_id INT NOT NULL, departure_name VARCHAR(50) NOT NULL,'+ 
-                'return_id INT NOT NULL, return_name VARCHAR(50) NOT NULL, distance DOUBLE PRECISION NOT NULL, duration INT NOT NULL)', 
+                'return_id INT NOT NULL, return_name VARCHAR(50) NOT NULL, distance DOUBLE PRECISION, duration INT)', 
                 err => {
                     if(err) rej(err.message);
                     res("raw_journeys created")
@@ -44,8 +44,8 @@ async function createDbTablesIfNotExists(){
             pool.query(
             'CREATE TABLE IF NOT EXISTS raw_stations (fid INT PRIMARY KEY NOT NULL, id INT NOT NULL, nimi VARCHAR(50) NOT NULL,'+
             'namn VARCHAR(50), name VARCHAR(50), osoite VARCHAR(50) NOT NULL,'+
-            'address VARCHAR(50) NOT NULL, kaupunki VARCHAR(20), stad VARCHAR(20), Operaattori VARCHAR(50), Kapasiteetti INT NOT NULL,'+
-            'location_x VARCHAR(50) NOT NULL, location_y VARCHAR(50) NOT NULL)',
+            'address VARCHAR(50) NOT NULL, kaupunki VARCHAR(20), stad VARCHAR(20), Operaattori VARCHAR(50), Kapasiteetti INT,'+
+            'location_x VARCHAR(50), location_y VARCHAR(50))',
             err => {
                 if(err) rej(err.message);
                 res("raw_stations created")
