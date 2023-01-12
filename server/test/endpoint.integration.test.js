@@ -60,7 +60,7 @@ describe("Express server", () =>{
     describe("/GET journeys",  () => {
         it("it should have status 200", (done) => {
             chai.request(api)
-                .get("/journeys")
+                .get("/journeys?limit=50")
                 .end((err, res) => {
                     res.should.have.status(200);
                 done();
@@ -68,7 +68,7 @@ describe("Express server", () =>{
         });
         it("it should return a object", (done) => {
             chai.request(api)
-                .get("/journeys")
+                .get("/journeys?limit=50")
                 .end((err, res) => {
                     res.body.should.be.a("object");
                 done();
@@ -76,10 +76,18 @@ describe("Express server", () =>{
         });
         it("it should GET all the journeys", (done) => {
             chai.request(api)
-                .get("/journeys")
+                .get("/journeys?limit=50")
                 .end((err, res) => {
                     const data = res.body.journeys;
                     data.length.should.be.equal(5);
+                done();
+            });
+        });
+        it("it should return 404 if no limit", (done) => {
+            chai.request(api)
+                .get("/journeys")
+                .end((err, res) => {
+                    res.should.have.status(404);
                 done();
             });
         });

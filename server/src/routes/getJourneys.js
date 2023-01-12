@@ -4,6 +4,11 @@ const getJourneys = async (req, res) => {
     const offset = req.query.offset;
     const limit = req.query.limit;
 
+    if(limit === undefined || limit > 1000){
+        res.status(404).send("Add limit < 1000 as params to your API call");
+        return
+    }
+
     const array = await Promise.all([
         db.getJourneys(offset, limit).then(data => data.rows),
         db.getJourneyCount().then(data => data.rows).then(rows => rows[0])
