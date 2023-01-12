@@ -16,6 +16,10 @@ const populateDB = async(dir) => {
 }
 
 const readFiles = async(dir, dataType) => {
+    if(!fs.existsSync(dir)){
+        fs.mkdirSync(dir, { recursive: true })
+    }
+    
     const files = fs.readdirSync(dir);
 
     if(files.length === 0){
