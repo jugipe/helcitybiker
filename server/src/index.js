@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env."+`${process.env.NODE_ENV}`});
+require("dotenv").config({ path: "./.env."+`${process.env.NODE_ENV}`});
 const express = require("express");
 const cors = require("cors");
 const { launch, shutdown } = require("./util/api.util");

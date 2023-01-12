@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "An app to visualize Helsinki City Bikes usage\"",
   "scripts": {
-    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run start\" ",
-    "dev:populate": "concurrently \"cd server && npm run dev:populate\" \"cd client && npm run start\" ",
-    "test": "concurrently \"cd server && npm run test\" \"cd client && npm run test\" "
+    "dev": "concurrently npm:api npm:client",
+    "dev:populate": "concurrently npm:api:populate npm:client",
+    "api": "cd server && npm run dev",
+    "api:populate": "cd server && npm run dev:populate",
+    "client": "cd client && npm run start"
   },
   "repository": {
     "type": "git",
