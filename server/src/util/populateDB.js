@@ -52,6 +52,7 @@ const downloadStationData = (dir) => {
             file.on("finish", async() => {
                 file.close();
                 await db.addCSVtoTable("stations", file.path)
+                await db.updateStationsWithCity();
                 res("Finished downloading -> "+url);
             });
             file.on("error", (err) => {
