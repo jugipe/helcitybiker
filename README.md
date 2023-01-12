@@ -117,7 +117,7 @@ To get your local copy up and running follow these steps
     API_PORT= port you want your api to use i.e "9001"
     DB_USER= db username i.e "postgres"
     DB= name of the database i.e "postgres"
-    DB_PW = password to db i.e "secret"
+    DB_PW = password to db i.e "postgres"
     DB_PORT= port number you want to use i.e 5432
     DB_HOST= db hostname i.e "localhost"
 ```
