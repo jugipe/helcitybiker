@@ -7,7 +7,6 @@ import StationsList from "./components/StationsList";
 import StationInfo from "./components/StationInfo";
 import NavBar from "./components/NavBar";
 import NoPage from "./components/NoPage";
-import Footer from "./components/Footer";
 
 function App() {
   return (
