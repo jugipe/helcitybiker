@@ -94,7 +94,7 @@ To get your local copy up and running follow these steps
       ```
 6. Browser will start automatically, if not click -> http://localhost:3000
 
-### Without docker
+### Without Docker
 
 1. Setup postgres database if you dont already have one, you can get it from https://www.postgresql.org/download/.
 2. Make sure you have atleast one database, you can use the default postgres database. If you want to run the api integration
@@ -105,7 +105,7 @@ To get your local copy up and running follow these steps
   ```
 4. Head to backend folder with 
       ```sh
-        cd client/
+        cd server/
       ```
 5. Install depencies with 
       ```sh
