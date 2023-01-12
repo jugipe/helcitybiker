@@ -7,7 +7,7 @@ let pool;
 
 async function init() {
         const user = process.env.DB_USER || "postgres";
-        const password = process.env.DB_PW || "secret";
+        const password = process.env.DB_PW || "postgres";
         const host = process.env.DB_HOST || "localhost";
         const database = process.env.DB || "postgres";
         const port = process.env.DB_PORT || 5432;
