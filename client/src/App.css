@@ -53,6 +53,7 @@
 
 .stationInfoCard {
   min-height: 82.5vh;
+  text-align: center;
 }
 
 .page-link.active  {
