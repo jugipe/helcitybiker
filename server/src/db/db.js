@@ -36,7 +36,7 @@ async function createDbTablesIfNotExists(){
                 'departure TIMESTAMP, return TIMESTAMP, departure_id INT, departure_name VARCHAR(50),'+ 
                 'return_id INT, return_name VARCHAR(50), distance DOUBLE PRECISION, duration INT)', 
                 err => {
-                    if(err) rej(error.message);
+                    if(err) rej(err.message);
                     res("raw_journeys created")
                 })
         }),
@@ -47,7 +47,7 @@ async function createDbTablesIfNotExists(){
             'address VARCHAR(50), kaupunki VARCHAR(20), stad VARCHAR(20), Operaattori VARCHAR(50), Kapasiteetti INT,'+
             'location_x VARCHAR(50), location_y VARCHAR(50))',
             err => {
-                if(err) rej(error.message);
+                if(err) rej(err.message);
                 res("raw_stations created")
             })
         })
@@ -89,7 +89,7 @@ function updateStationsWithCity(){
 function disconnect() {
     return new Promise((res, rej) => {
         pool.end(err => {
-            if (err) rej(err);
+            if (err) rej(err.message);
             else res();
         });
     });
@@ -98,7 +98,7 @@ function disconnect() {
 function getAllStations() {
     return new Promise((res, rej) => {
         pool.query("SELECT * FROM stations ORDER BY fid ASC", (err, data) => {
-            if(err) {console.log(err); return rej(err)};
+            if(err) {rej(err.message)};
             res(data);
         });
     });
@@ -107,7 +107,7 @@ function getAllStations() {
 async function getJourneys(offset, limit) {
     return new Promise((res, rej) => {
         pool.query("SELECT * FROM journeys ORDER BY id ASC OFFSET $1 LIMIT $2", [offset, limit], (err, data) => {
-            if(err) return rej(err);
+            if(err) rej(err.message);
             res(data);
         });
     });
@@ -116,7 +116,7 @@ async function getJourneys(offset, limit) {
 async function getJourneyCount(){
     return new Promise((res, rej) => {
         pool.query("SELECT COUNT(*) AS total FROM journeys", (err, data) => {
-            if(err) return rej(err);
+            if(err) rej(err.message);
             res(data);
         });
     });
@@ -125,7 +125,7 @@ async function getJourneyCount(){
 async function getStation(id) {
     return new Promise((res, rej) => {
         pool.query("SELECT * FROM stations WHERE id= $1",[id],(err, data) => {
-            if(err) {console.log(err); return rej(err)};
+            if(err) {rej(err.message)};
             res(data);
         });
     });
@@ -135,7 +135,7 @@ async function getStationDepInfo(id) {
     return new Promise((res, rej) => {
         pool.query("SELECT COUNT(return_name) AS departures, AVG(distance) AS avg_dep_dist FROM journeys "+
         "WHERE departure_id= $1",[id],(err, data) => {
-            if(err) {console.log(err); return rej(err)};
+            if(err) {rej(err.message)};
             res(data);
         });
     });
@@ -145,7 +145,7 @@ async function getStationRetInfo(id) {
     return new Promise((res, rej) => {
         pool.query("SELECT COUNT(departure_name) AS returns, AVG(distance) AS avg_ret_dist FROM journeys "+
         "WHERE return_id=$1",[id],(err, data) => {
-            if(err) {console.log(err); return rej(err)};
+            if(err) {rej(err.message)};
             res(data);
         });
     });
@@ -155,7 +155,7 @@ async function getStationRetTop5Info(id) {
     return new Promise((res, rej) => {
         pool.query("SELECT return_name, return_id, COUNT(return_name) as top_5_dep FROM journeys WHERE departure_id = $1 "+
         "GROUP BY return_name, return_id ORDER BY top_5_dep DESC LIMIT 5",[id],(err, data) => {
-            if(err) {console.log(err); return rej(err)};
+            if(err) {return rej(err.message)};
             res(data);
         });
     });
@@ -165,40 +165,16 @@ async function getStationDepTop5Info(id) {
     return new Promise((res, rej) => {
         pool.query("SELECT departure_name, departure_id, COUNT(departure_name) as top_5_ret FROM journeys WHERE return_id = $1 "+
         "GROUP BY departure_name, departure_id ORDER BY top_5_ret DESC LIMIT 5",[id],(err, data) => {
-            if(err) {console.log(err); return rej(err)};
+            if(err) {rej(err.message)};
             res(data);
         });
     });
 }
 
-/* 
-REMOVE THESE IF NO USE IN FINAL
-async function addStation(fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y){
-    return new Promise((res, rej) => {
-        pool.query("INSERT INTO raw_stations(fid, id, nimi, namn, name, osoite, address, kaupunki, stad,"+
-         "operaattori, kapasiteetti, location_x, location_y) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)", 
-         [fid, id, nimi, namn, name, osoite, address, kaupunki, stad, operaattori, kapasiteetti, x, y], err => {
-            if(err) {console.log(err); return rej(err)};
-            res();
-         });
-    });
-}
-
-async function addJourney(departure_time, return_time, dep_station_id, dep_station_name, ret_station_id, ret_station_name, distance, duration){
-    return new Promise((res, rej) => {
-        pool.query("INSERT INTO raw_journeys(id, departure, return, departure_id, departure_name, return_id, return_name, distance, duration)"+
-        "VALUES(DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8)", [departure_time, return_time, dep_station_id, dep_station_name, ret_station_id, 
-            ret_station_name, distance, duration], err => {
-                if(err) return rej(err);
-                res();
-            });    
-    });
-}*/
-
 async function truncateTable(tableName){
     return new Promise((res, rej) => {
         pool.query("TRUNCATE "+tableName+" RESTART IDENTITY", err => {
-            if(err) {console.log(err); return rej(err)};
+            if(err) {rej(err.message)};
             res();
         });
     });
@@ -220,7 +196,7 @@ async function addCSVtoTable(tableName, fileName){
             stream.on("error", done);
             stream.on("finish", done => res("done reading file -> "+fileName+" to database"));
             filestream.pipe(stream);
-            if(error) {rej(err)};
+            if(error) {rej(error.message)};
         });      
     });
 }
