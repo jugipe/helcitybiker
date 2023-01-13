@@ -7,7 +7,7 @@ services:
       - 5432:5432
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -24,7 +24,7 @@ services:
     environment:
       DB_USER: "postgres"
       DB: "postgres"
-      DB_PW:  "secret"
+      DB_PW:  "postgres"
       DB_PORT: 5432
       DB_HOST: "psql"
       NODE_ENV_POPULATE: "true"
