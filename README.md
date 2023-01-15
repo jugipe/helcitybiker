@@ -3,6 +3,14 @@
 Solita 2023 pre-assignment for the Dev Academy 2023\
 More info for the assignment @ https://github.com/solita/dev-academy-2023-exercise.
 
+## Deployments
+
+The frontend is running in Netlify and backend is running in Heroku you can test them here:
+  * [Frontend](https://helcitybiker.netlify.app/)
+  * [Backend](https://helcitybiker.herokuapp.com/)
+ 
+ **_NOTE:_** Due to Heroku database row restrictions the backend is only populated with a portion of the real data.
+
 ## Description
 
 Helsinki City Bike app which visualizes the usage of city bikes in the capital region of Finland. With the
@@ -145,6 +153,6 @@ To get your local copy up and running follow these steps
 
 ### Todo / Future improvements
 - Add searching and filtering to Journey and Station Views
-- Run backend in cloud
+- ~~Run backend in cloud~~
 - Implement E2E tests
 
