@@ -10,7 +10,8 @@ The frontend is running in Netlify and backend is running in Heroku you can test
   * [Backend](https://helcitybiker.herokuapp.com/)
  
  **_NOTE:_** Due to Heroku database row restrictions the backend is only populated with a portion of the real data.\
- **_NOTE:_** API post endpoints are disabled in the deployed version
+ **_NOTE:_** API post endpoints are disabled in the deployed version.\
+ **_NOTE:_** It is running on heroku eco dyno, which may take some time to become active after it has not been used.
 
 ## Description
 
